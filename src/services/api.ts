@@ -141,8 +141,9 @@ async function http<T>(path: string, init: RequestInit = {}, retry = true): Prom
     throw new ApiError(res.status, message);
   }
 
-  if (res.status === 204) return undefined as T;
-  return (await res.json()) as T;
+  if (res.status === 204 || res.status === 205) return undefined as T;
+  const text = await res.text();
+  return (text ? JSON.parse(text) : undefined) as T;
 }
 
 export const api = {
