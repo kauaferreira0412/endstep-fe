@@ -26,6 +26,7 @@ import type {
 import type { AdminUser, PermissionCatalogItem } from "@/types/admin";
 import type { CustomArt, CustomArtParams } from "@/types/customArt";
 import type { DeckSuggestion, Friend, SuggestionCardLine } from "@/types/social";
+import type { HomeStats } from "@/types/stats";
 import type { CreateRoomInput, Room, RoomSummary } from "@/types/room";
 import type { GameSnapshot, LogLine } from "@/types/game";
 
@@ -295,6 +296,9 @@ export const api = {
     http(`/api/rooms/${code}/start`, { method: "POST" }),
   sitAtTable: (code: string): Promise<{ gameId: number | null }> =>
     http(`/api/rooms/${code}/sit`, { method: "POST" }),
+
+  // -------- home / estatísticas --------
+  homeStats: (): Promise<HomeStats> => http("/api/stats/home"),
 
   // -------- amigos / sugestões --------
   friends: (): Promise<Friend[]> => http("/api/friends"),

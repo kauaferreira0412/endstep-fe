@@ -1,0 +1,127 @@
+.root {
+  @apply mx-auto max-w-5xl pb-10;
+}
+
+.hero {
+  @apply relative overflow-hidden rounded-2xl border border-line/70 p-6 shadow-card;
+  background-image:
+    radial-gradient(700px 300px at 10% -40%, rgba(167, 139, 250, 0.28), transparent 60%),
+    radial-gradient(600px 260px at 100% 120%, rgba(240, 200, 105, 0.12), transparent 60%),
+    linear-gradient(180deg, #2a2a52, #232343);
+}
+
+.heroTitle {
+  @apply text-2xl font-bold tracking-tight text-ink;
+}
+
+.heroText {
+  @apply mt-1 text-sm text-ink-dim;
+}
+
+.stats {
+  @apply mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5;
+}
+
+.stat {
+  @apply rounded-xl border border-line/50 bg-bg-input/40 px-3 py-3;
+}
+
+.statValue {
+  @apply text-lg font-bold text-ink;
+}
+
+.statLabel {
+  @apply mt-0.5 text-[11px] uppercase tracking-wide text-ink-faint;
+}
+
+.section {
+  @apply mt-8;
+}
+
+.sectionHead {
+  @apply mb-3 flex items-baseline justify-between;
+}
+
+.sectionTitle {
+  @apply text-sm font-semibold uppercase tracking-wider text-ink-dim;
+}
+
+.sectionHint {
+  @apply text-[11px] text-ink-faint;
+}
+
+.empty {
+  @apply rounded-xl border border-dashed border-line/70 py-8 text-center text-sm text-ink-dim;
+}
+
+.cmdGrid {
+  @apply grid grid-cols-2 gap-3 sm:grid-cols-4;
+}
+
+.cmd {
+  @apply overflow-hidden rounded-xl border border-line bg-bg-soft text-left shadow-card transition hover:-translate-y-0.5 hover:border-brand/60;
+}
+
+.cmdImg {
+  @apply aspect-[488/680] w-full bg-bg-elev object-cover;
+}
+
+.cmdBody {
+  @apply p-2.5;
+}
+
+.cmdName {
+  @apply truncate text-[13px] font-medium text-ink;
+}
+
+.cmdGames {
+  @apply mt-0.5 text-[11px] text-ink-faint;
+}
+
+.cardList {
+  @apply divide-y divide-line/60 rounded-xl border border-line/60 bg-bg-input/30;
+}
+
+.cardRow {
+  @apply flex items-center gap-3 px-3 py-2 text-sm;
+}
+
+.rank {
+  @apply w-5 shrink-0 text-right text-[11px] font-bold text-ink-faint;
+}
+
+.cardThumb {
+  @apply h-8 w-[22px] shrink-0 rounded-sm border border-line bg-bg-elev object-cover;
+}
+
+.cardName {
+  @apply flex-1 truncate text-ink-dim;
+}
+
+.cardGames {
+  @apply shrink-0 text-[11px] text-ink-faint;
+}
+
+.setList {
+  @apply flex flex-wrap gap-2;
+}
+
+.set {
+  @apply flex items-center gap-2 rounded-lg border border-line/60 bg-bg-elev/50 px-3 py-2;
+}
+
+.setIcon {
+  @apply h-5 w-5 shrink-0 object-contain;
+}
+
+.setName {
+  @apply text-[13px] text-ink;
+}
+
+.setDate {
+  @apply text-[11px] text-ink-faint;
+}
+
+.footer {
+  @apply mt-8 text-center text-[11px] text-ink-faint;
+}

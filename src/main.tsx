@@ -4,6 +4,7 @@ import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom"
 import { Layout } from "@/components/common/Layout/container";
 import { ProtectedRoute } from "@/components/common/ProtectedRoute/container";
 import { Dialogs } from "@/components/common/Dialogs/container";
+import { HomePage } from "@/pages/home/container";
 import { CardSearchPage } from "@/pages/cards/container";
 import { SyncPage } from "@/pages/sync/container";
 import { AdminUsersPage } from "@/pages/admin-users/container";
@@ -39,7 +40,8 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
-      { index: true, element: <Navigate to="/cards" replace /> },
+      { index: true, element: <Navigate to="/home" replace /> },
+      { path: "home", element: <HomePage /> },
       { path: "cards", element: <CardSearchPage /> },
       { path: "decks", element: <DecksPage /> },
       { path: "play", element: <RoomsPage /> },

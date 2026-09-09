@@ -36,6 +36,9 @@ export function LayoutView({
         <div className={styles.headerInner}>
           <Brand size={26} />
           <nav className={styles.nav}>
+            <NavLink to="/home" className={navLinkClass}>
+              Início
+            </NavLink>
             <NavLink to="/cards" className={navLinkClass}>
               Cartas
             </NavLink>
