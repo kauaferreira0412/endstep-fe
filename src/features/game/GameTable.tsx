@@ -33,7 +33,7 @@ export function GameTable() {
   const navigate = useNavigate();
   const authUser = useAuthStore((s) => s.user);
 
-  const { connect, disconnect, conn, error, players, cards, meUserId, roomCode, status, turn } =
+  const { connect, disconnect, conn, error, players, cards, meUserId, roomCode, status, turn, leaveGame } =
     useGameStore();
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -143,7 +143,13 @@ export function GameTable() {
     <div className="relative h-screen w-screen overflow-hidden bg-bg text-ink">
       {/* topo */}
       <div className="absolute inset-x-0 top-0 z-40 flex h-9 items-center gap-3 border-b border-line bg-bg/90 px-3 text-xs backdrop-blur">
-        <button className="shrink-0 text-ink-faint hover:text-ink" onClick={() => navigate("/play")}>
+        <button
+          className="shrink-0 text-ink-faint hover:text-ink"
+          onClick={() => {
+            if (iAmPlayer && status !== "FINISHED") leaveGame();
+            navigate("/play");
+          }}
+        >
           ← sair
         </button>
         <span className="shrink-0 font-semibold">Mesa {roomCode}</span>

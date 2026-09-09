@@ -87,6 +87,7 @@ interface GameState {
   passTurn: () => void;
   setPhase: (phase: Phase) => void;
   surrender: () => void;
+  leaveGame: () => void;
   sendChat: (text: string) => void;
 }
 
@@ -260,6 +261,7 @@ export const useGameStore = create<GameState>((set, get) => {
     passTurn: () => send("PASS_TURN"),
     setPhase: (phase) => send("SET_PHASE", { phase }),
     surrender: () => send("SURRENDER"),
+    leaveGame: () => send("LEAVE_GAME"),
     sendChat: (text) => get().socket?.chat(text),
   };
 });

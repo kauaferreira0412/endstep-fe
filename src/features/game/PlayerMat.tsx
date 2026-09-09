@@ -53,18 +53,38 @@ export function PlayerMat({
     setZoom((z) => clamp(z * (e.deltaY < 0 ? 1.12 : 0.89), 0.4, 3));
   }
 
+  const gone = player.status === "LEFT" || player.status === "LOST";
+
   return (
     <div
       className={`relative h-full w-full overflow-hidden border-2 ${
         isActive ? "border-brand" : isMe ? "border-line" : "border-line/40"
-      }`}
+      } ${gone ? "opacity-60 grayscale" : ""}`}
     >
+      {gone && (
+        <div className="pointer-events-none absolute inset-0 z-30 flex items-start justify-center pt-10">
+          <span className="rounded-full border border-danger/50 bg-bg/90 px-3 py-1 text-xs font-semibold text-danger shadow-glow">
+            {player.status === "LEFT"
+              ? `${player.username} saiu da partida`
+              : `${player.username} desistiu`}
+          </span>
+        </div>
+      )}
+
       {/* HUD */}
       <div className="absolute left-1 top-1 z-20 flex items-center gap-1 rounded-md bg-bg/85 px-1.5 py-0.5 text-xs backdrop-blur">
         <span className={`truncate font-semibold ${isActive ? "text-brand" : "text-ink"}`}>
           {player.username}
           {isMe && <span className="ml-1 text-ink-faint">(você)</span>}
         </span>
+        {player.status === "LEFT" && (
+          <span className="rounded bg-danger/20 px-1 text-[10px] font-semibold text-danger">saiu</span>
+        )}
+        {player.status === "LOST" && (
+          <span className="rounded bg-warn/20 px-1 text-[10px] font-semibold text-warn">
+            desistiu
+          </span>
+        )}
         <span className={player.connected ? "text-ok" : "text-danger"}>●</span>
         <span
           className="rounded bg-bg-elev px-1 text-[10px] text-ink-dim"
