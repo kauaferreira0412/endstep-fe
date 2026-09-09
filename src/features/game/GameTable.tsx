@@ -15,7 +15,6 @@ import { TurnBar } from "./TurnBar";
 import { ZoneBrowser } from "./ZoneBrowser";
 import { playTurnChime } from "./turnSound";
 import { useGameShortcuts } from "./useGameShortcuts";
-import { useTranslationStore } from "@/stores/translationStore";
 
 const SOUND_KEY = "endstep.turnSound";
 
@@ -49,8 +48,6 @@ export function GameTable() {
     }
   });
   const [myTurnToast, setMyTurnToast] = useState(false);
-  const ptOn = useTranslationStore((s) => s.enabled);
-  const togglePt = useTranslationStore((s) => s.toggle);
 
   useEffect(() => {
     if (gameId) connect(gameId);
@@ -165,15 +162,6 @@ export function GameTable() {
         <div className="ml-auto min-w-0 flex-1 overflow-x-auto">
           <TurnBar />
         </div>
-        <button
-          className={`shrink-0 rounded border px-1.5 py-0.5 ${
-            ptOn ? "border-brand/60 bg-brand/15 text-brand" : "border-line text-ink-faint hover:text-ink"
-          }`}
-          onClick={togglePt}
-          title={ptOn ? "Tradução PT-BR: ligada (ao ver a carta)" : "Tradução PT-BR: desligada"}
-        >
-          🌐 {ptOn ? "PT" : "EN"}
-        </button>
         <button
           className="shrink-0 rounded border border-line px-1.5 py-0.5 text-ink-faint hover:text-ink"
           onClick={toggleSound}

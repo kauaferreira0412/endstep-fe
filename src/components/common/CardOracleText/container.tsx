@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslationStore } from "@/stores/translationStore";
 import { CardOracleTextView } from "./index";
 
@@ -12,29 +12,33 @@ interface Props {
 }
 
 export function CardOracleText({ reference, original, className, hideToggle }: Props) {
-  const enabled = useTranslationStore((s) => s.enabled);
-  const toggle = useTranslationStore((s) => s.toggle);
+  // sempre comeca em ingles; a traducao e opt-in por visualizacao (nao persiste)
+  const [showPt, setShowPt] = useState(false);
   const ensure = useTranslationStore((s) => s.ensure);
   const key = "oracleId" in reference ? `u:${reference.oracleId}` : `o:${reference.oracleCardId}`;
   const entry = useTranslationStore((s) => s.cache[key]);
 
   useEffect(() => {
-    if (enabled) ensure(reference);
-  }, [enabled, key]); // eslint-disable-line react-hooks/exhaustive-deps
+    setShowPt(false);
+  }, [key]);
+
+  useEffect(() => {
+    if (showPt) ensure(reference);
+  }, [showPt, key]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const t = entry?.status === "ok" ? entry.data : null;
-  const showTranslated = enabled && t && t.source !== "none" && t.oracleText;
+  const showTranslated = showPt && t && t.source !== "none" && t.oracleText;
   const body = showTranslated ? t!.oracleText : original;
 
   return (
     <CardOracleTextView
-      enabled={enabled}
-      loading={enabled && entry?.status === "loading"}
-      source={t?.source ?? null}
+      enabled={showPt}
+      loading={showPt && entry?.status === "loading"}
+      source={showPt ? (t?.source ?? null) : null}
       body={original == null && body == null ? null : body}
       className={className}
       hideToggle={hideToggle}
-      onToggle={toggle}
+      onToggle={() => setShowPt((v) => !v)}
     />
   );
 }
