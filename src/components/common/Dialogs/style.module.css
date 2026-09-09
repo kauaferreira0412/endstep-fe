@@ -1,0 +1,43 @@
+.overlay {
+  @apply fixed inset-0 z-[200] flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm;
+}
+
+.card {
+  @apply w-full max-w-sm animate-fade-in rounded-xl border border-line/70 p-5 shadow-card;
+  background-image: linear-gradient(180deg, #2a2a52 0%, #232343 100%);
+}
+
+.title {
+  @apply text-sm font-semibold text-ink;
+}
+
+.message {
+  @apply text-sm text-ink-dim;
+}
+
+.messageSpaced {
+  @apply mt-1;
+}
+
+.input {
+  @apply mt-3 w-full rounded-lg border border-line bg-bg-input px-3.5 py-2.5 text-sm text-ink
+    placeholder:text-ink-faint focus:border-brand/55 focus:outline-none focus:ring-2 focus:ring-brand/25;
+}
+
+.actions {
+  @apply mt-4 flex justify-end gap-2;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-bg-elev
+    px-4 py-2 text-sm font-medium text-ink transition hover:border-brand/55 hover:bg-bg-elev/75
+    focus:outline-none focus:ring-2 focus:ring-brand/40;
+}
+
+.btnPrimary {
+  @apply border-brand/60 bg-brand/25 hover:bg-brand/35;
+}
+
+.btnDanger {
+  @apply border-danger/55 text-danger hover:bg-danger/10;
+}

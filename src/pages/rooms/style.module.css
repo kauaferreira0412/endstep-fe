@@ -1,0 +1,115 @@
+.root {
+  @apply mx-auto max-w-5xl pb-10;
+}
+
+.hero {
+  @apply relative overflow-hidden rounded-2xl border border-line/70 p-7 shadow-card;
+}
+
+.heroGlow {
+  @apply pointer-events-none absolute inset-0;
+  background-image:
+    radial-gradient(700px 300px at 12% -40%, rgba(167, 139, 250, 0.3), transparent 60%),
+    radial-gradient(600px 280px at 100% 120%, rgba(240, 200, 105, 0.12), transparent 60%),
+    linear-gradient(180deg, #2a2a52, #232343);
+}
+
+.heroInner {
+  @apply relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between;
+}
+
+.pill {
+  @apply mb-2 inline-flex items-center gap-2 rounded-full border border-brand/40 bg-brand/15
+    px-3 py-1 text-xs font-medium text-brand;
+}
+
+.heroTitle {
+  @apply text-2xl font-bold tracking-tight text-ink;
+}
+
+.heroText {
+  @apply mt-1 max-w-md text-sm text-ink-dim;
+}
+
+.createButton {
+  @apply inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-brand/60
+    bg-brand/25 px-5 py-2.5 text-sm font-medium text-ink shadow-glow transition hover:bg-brand/35;
+}
+
+.error {
+  @apply mt-4 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger;
+}
+
+.columns {
+  @apply mt-5 grid gap-4 md:grid-cols-[1fr_1.3fr];
+}
+
+.card {
+  @apply flex flex-col rounded-xl border border-line/70 p-5 shadow-card;
+  background-image: linear-gradient(180deg, #2a2a52 0%, #232343 100%);
+}
+
+.cardTitle {
+  @apply flex items-center gap-2 text-sm font-semibold text-ink;
+}
+
+.cardIconBrand {
+  @apply grid h-7 w-7 place-items-center rounded-lg bg-brand/15 text-brand;
+}
+
+.cardIconGold {
+  @apply grid h-7 w-7 place-items-center rounded-lg bg-gold/15 text-gold;
+}
+
+.cardHint {
+  @apply mt-1 text-xs text-ink-faint;
+}
+
+.joinForm {
+  @apply mt-4 flex flex-col gap-2;
+}
+
+.codeInput {
+  @apply w-full rounded-lg border border-line bg-bg-input px-3.5 py-2.5 text-center text-lg
+    font-semibold uppercase tracking-[0.5em] text-ink placeholder:tracking-[0.3em]
+    placeholder:text-ink-faint focus:border-brand/55 focus:outline-none focus:ring-2 focus:ring-brand/25;
+}
+
+.primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-brand/60 bg-brand/25
+    px-4 py-2 text-sm font-medium text-ink transition hover:bg-brand/35
+    disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+.publicHead {
+  @apply flex items-center justify-between;
+}
+
+.live {
+  @apply inline-flex items-center gap-1.5 text-[11px] text-ink-faint;
+}
+
+.liveDot {
+  @apply h-1.5 w-1.5 animate-pulse rounded-full bg-ok;
+}
+
+.emptyBox {
+  @apply mt-4 flex flex-1 flex-col items-center justify-center rounded-xl border border-dashed
+    border-line/70 py-8 text-center;
+}
+
+.emptyIcon {
+  @apply mb-2 text-2xl opacity-70;
+}
+
+.emptyText {
+  @apply text-sm text-ink-dim;
+}
+
+.emptyLink {
+  @apply mt-2 text-xs font-medium text-brand hover:text-brand-hover;
+}
+
+.list {
+  @apply mt-3 space-y-2;
+}

@@ -1,0 +1,20 @@
+.errorWrap {
+  @apply space-y-3;
+}
+
+.error {
+  @apply rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger;
+}
+
+.backButton {
+  @apply inline-flex w-full items-center justify-center gap-2 rounded-lg border border-line
+    bg-bg-elev px-4 py-2 text-sm font-medium text-ink transition hover:border-brand/55 hover:bg-bg-elev/75;
+}
+
+.pending {
+  @apply flex items-center gap-3 text-sm text-ink-dim;
+}
+
+.spinner {
+  @apply h-4 w-4 animate-spin rounded-full border-2 border-line border-t-brand;
+}

@@ -1,0 +1,7 @@
+.loading {
+  @apply flex min-h-screen items-center justify-center;
+}
+
+.spinner {
+  @apply h-6 w-6 animate-spin rounded-full border-2 border-line border-t-brand;
+}

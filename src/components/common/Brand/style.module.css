@@ -1,0 +1,7 @@
+.root {
+  @apply inline-flex items-center gap-2.5;
+}
+
+.text {
+  @apply text-[15px] font-bold tracking-[0.14em] text-ink;
+}

@@ -1,0 +1,1 @@
+{"root":["./src/main.tsx","./src/vite-env.d.ts","./src/components/layout.tsx","./src/features/admin/syncpage.tsx","./src/features/cards/carddetailpanel.tsx","./src/features/cards/cardgrid.tsx","./src/features/cards/cardsearchpage.tsx","./src/services/api.ts","./src/stores/cardsearchstore.ts","./src/types/card.ts"],"errors":true,"version":"5.9.3"}

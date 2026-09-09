@@ -1,0 +1,129 @@
+.root {
+  @apply mx-auto max-w-2xl;
+}
+
+.loading {
+  @apply mx-auto max-w-2xl py-16 text-center text-sm text-ink-faint;
+}
+
+.loadingError {
+  @apply text-danger;
+}
+
+.back {
+  @apply mb-3 text-xs text-ink-faint hover:text-ink;
+}
+
+.card {
+  @apply rounded-xl border border-line/70 p-5 shadow-card;
+  background-image: linear-gradient(180deg, #2a2a52 0%, #232343 100%);
+}
+
+.headRow {
+  @apply flex items-start justify-between;
+}
+
+.title {
+  @apply text-lg font-semibold text-ink;
+}
+
+.subtitle {
+  @apply text-sm text-ink-dim;
+}
+
+.error {
+  @apply mt-3 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger;
+}
+
+.joinBox {
+  @apply mt-5 space-y-3;
+}
+
+.control {
+  @apply w-full rounded-lg border border-line bg-bg-input px-3.5 py-2.5 text-sm text-ink
+    placeholder:text-ink-faint focus:border-brand/55 focus:outline-none focus:ring-2 focus:ring-brand/25;
+}
+
+.controlSpaced {
+  @apply mt-1 w-full rounded-lg border border-line bg-bg-input px-3.5 py-2.5 text-sm text-ink
+    focus:border-brand/55 focus:outline-none focus:ring-2 focus:ring-brand/25;
+}
+
+.joinButtons {
+  @apply flex gap-2;
+}
+
+.primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-brand/60 bg-brand/25
+    px-4 py-2 text-sm font-medium text-ink transition hover:bg-brand/35
+    disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+.primaryFlex {
+  @apply flex-1;
+}
+
+.primaryFull {
+  @apply mt-2 w-full;
+}
+
+.secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-bg-elev
+    px-4 py-2 text-sm font-medium text-ink transition hover:border-brand/55 hover:bg-bg-elev/75;
+}
+
+.list {
+  @apply mt-5 space-y-2;
+}
+
+.playerRow {
+  @apply flex items-center justify-between rounded-lg border border-line bg-bg-elev px-3 py-2;
+}
+
+.playerName {
+  @apply text-sm text-ink;
+}
+
+.chip {
+  @apply ml-2 inline-flex items-center rounded-full border border-line bg-bg-elev px-2 py-0.5 text-[11px] font-medium text-ink-dim;
+}
+
+.deckState {
+  @apply text-xs text-ink-faint;
+}
+
+.deckStateReady {
+  @apply text-xs text-ok;
+}
+
+.spectatorRow {
+  @apply px-3 py-1 text-xs text-ink-faint;
+}
+
+.deckPicker {
+  @apply mt-4;
+}
+
+.deckLabel {
+  @apply text-xs text-ink-dim;
+}
+
+.deckLabelNote {
+  @apply ml-1 text-ink-faint;
+}
+
+.warn {
+  @apply mt-1 text-xs text-warn;
+}
+
+.note {
+  @apply mt-1 text-[11px] text-ink-faint;
+}
+
+.footer {
+  @apply mt-5 flex gap-2;
+}
+
+.waiting {
+  @apply flex-1 rounded-lg border border-line bg-bg-elev px-3 py-2 text-center text-sm text-ink-faint;
+}

@@ -1,0 +1,121 @@
+.title {
+  @apply text-lg font-semibold text-ink;
+}
+
+.intro {
+  @apply mt-1 max-w-2xl text-sm text-ink-dim;
+}
+
+.code {
+  @apply text-ink;
+}
+
+.actions {
+  @apply mt-5 flex gap-2;
+}
+
+.primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-brand/60 bg-brand/25
+    px-4 py-2 text-sm font-medium text-ink transition hover:bg-brand/35
+    disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+.secondary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-bg-elev
+    px-4 py-2 text-sm font-medium text-ink transition hover:border-brand/55 hover:bg-bg-elev/75;
+}
+
+.error {
+  @apply my-3 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger;
+}
+
+.consoleWrap {
+  @apply mt-5 overflow-hidden rounded-xl border border-line/70 shadow-card;
+  background-image: linear-gradient(180deg, #2a2a52 0%, #232343 100%);
+}
+
+.consoleHead {
+  @apply flex items-center justify-between border-b border-line/60 px-4 py-2;
+}
+
+.consoleTitle {
+  @apply text-[11px] font-semibold uppercase tracking-wider text-ink-faint;
+}
+
+.live {
+  @apply inline-flex items-center gap-1.5 text-[11px] text-ok;
+}
+
+.liveDot {
+  @apply h-1.5 w-1.5 animate-pulse rounded-full bg-ok;
+}
+
+.console {
+  @apply m-0 max-h-[340px] overflow-y-auto whitespace-pre-wrap break-words bg-bg-input/40 px-4 py-3
+    font-mono text-[12px] leading-[1.6] text-ink-dim;
+}
+
+.line {
+  @apply flex gap-2;
+}
+
+.lineWarn {
+  @apply flex gap-2 text-warn;
+}
+
+.lineError {
+  @apply flex gap-2 text-danger;
+}
+
+.lineTime {
+  @apply shrink-0 text-ink-faint;
+}
+
+.lineLevel {
+  @apply w-10 shrink-0 text-ink-faint;
+}
+
+.tableWrap {
+  @apply mt-5 overflow-x-auto rounded-xl border border-line/70 shadow-card;
+  background-image: linear-gradient(180deg, #2a2a52 0%, #232343 100%);
+}
+
+.table {
+  @apply w-full text-[13px];
+}
+
+.th {
+  @apply border-b border-line px-3 py-2.5 text-left font-semibold text-ink-faint;
+}
+
+.td {
+  @apply px-3 py-2.5;
+}
+
+.tdMuted {
+  @apply px-3 py-2.5 text-ink-faint;
+}
+
+.row {
+  @apply border-b border-line/60 last:border-0;
+}
+
+.empty {
+  @apply px-3 py-4 text-ink-faint;
+}
+
+.chip {
+  @apply inline-flex items-center rounded-full border border-line bg-bg-elev px-2 py-0.5 text-[11px] font-medium text-ink-dim;
+}
+
+.chipRunning {
+  @apply border-brand/50 text-brand;
+}
+
+.chipDone {
+  @apply border-ok/50 text-ok;
+}
+
+.chipFailed {
+  @apply border-danger/50 text-danger;
+}

@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  :root {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-bg text-ink font-sans antialiased;
+    /* atmosfera arcana: brilho violeta no alto-esquerda, um toque dourado à direita,
+       degradê azul-noite descendo */
+    background-image:
+      radial-gradient(1200px 640px at 12% -12%, rgba(167, 139, 250, 0.16), transparent 60%),
+      radial-gradient(900px 520px at 96% 4%, rgba(240, 200, 105, 0.06), transparent 55%),
+      linear-gradient(180deg, #222240 0%, #1a1a2e 46%, #161628 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-line;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #4a4a80;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::selection {
+    background: rgba(167, 139, 250, 0.32);
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line
+      bg-bg-elev px-4 py-2 text-sm font-medium text-ink transition
+      hover:border-brand/55 hover:bg-bg-elev/75
+      focus:outline-none focus:ring-2 focus:ring-brand/40
+      disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply border-brand/60 bg-brand/25 text-ink hover:bg-brand/35;
+  }
+  .btn-ghost {
+    @apply border-transparent bg-transparent hover:bg-bg-elev/70;
+  }
+  .btn-danger {
+    @apply border-danger/55 text-danger hover:bg-danger/10;
+  }
+  .input {
+    @apply w-full rounded-lg border border-line bg-bg-input px-3.5 py-2.5 text-sm text-ink
+      placeholder:text-ink-faint focus:border-brand/55 focus:outline-none
+      focus:ring-2 focus:ring-brand/25;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink-dim;
+  }
+  .card {
+    @apply rounded-xl border border-line/70 shadow-card;
+    background-image: linear-gradient(180deg, #2a2a52 0%, #232343 100%);
+  }
+  .panel {
+    @apply rounded-xl border border-line/50 bg-bg-soft/70;
+  }
+  .chip {
+    @apply inline-flex items-center rounded-full border border-line bg-bg-elev px-2 py-0.5
+      text-[11px] font-medium text-ink-dim;
+  }
+}

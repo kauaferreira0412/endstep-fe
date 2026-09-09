@@ -1,0 +1,47 @@
+.head {
+  @apply mb-1 flex items-end justify-between gap-4;
+}
+
+.title {
+  @apply text-lg font-semibold text-ink;
+}
+
+.subtitle {
+  @apply text-sm text-ink-dim;
+}
+
+.form {
+  @apply mt-4 flex gap-2;
+}
+
+.input {
+  @apply max-w-lg w-full rounded-lg border border-line bg-bg-input px-3.5 py-2.5 text-sm text-ink
+    placeholder:text-ink-faint focus:border-brand/55 focus:outline-none focus:ring-2 focus:ring-brand/25;
+}
+
+.submit {
+  @apply inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-brand/60
+    bg-brand/25 px-4 py-2 text-sm font-medium text-ink transition hover:bg-brand/35;
+}
+
+.status {
+  @apply mt-3 min-h-[20px] text-[13px] text-ink-faint;
+}
+
+.error {
+  @apply my-3 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger;
+}
+
+.pager {
+  @apply mt-6 flex items-center gap-3;
+}
+
+.pagerButton {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-bg-elev
+    px-4 py-2 text-sm font-medium text-ink transition hover:border-brand/55 hover:bg-bg-elev/75
+    disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+.pagerInfo {
+  @apply text-sm text-ink-dim;
+}

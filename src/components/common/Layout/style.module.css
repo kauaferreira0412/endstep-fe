@@ -1,0 +1,83 @@
+.root {
+  @apply flex min-h-screen flex-col;
+}
+
+.header {
+  @apply sticky top-0 z-20 border-b border-line/60 bg-bg/70 backdrop-blur-md;
+}
+
+.headerInner {
+  @apply flex h-14 w-full items-center gap-6 px-6;
+}
+
+.nav {
+  @apply flex items-center gap-1;
+}
+
+.navLink {
+  @apply rounded-lg px-3 py-1.5 text-sm font-medium text-ink-dim transition hover:bg-bg-elev/60 hover:text-ink;
+}
+
+.navLinkActive {
+  @apply bg-bg-elev text-ink;
+}
+
+.userWrap {
+  @apply relative ml-auto;
+}
+
+.userButton {
+  @apply flex items-center gap-2 rounded-lg border border-line bg-bg-elev px-2 py-1.5 text-sm hover:border-brand/50;
+}
+
+.avatarImg {
+  @apply h-6 w-6 rounded-full object-cover;
+}
+
+.avatarInitials {
+  @apply grid h-6 w-6 place-items-center rounded-full bg-brand/25 text-[11px] font-bold text-brand;
+}
+
+.userName {
+  @apply max-w-[140px] truncate text-ink-dim;
+}
+
+.caret {
+  @apply text-ink-faint;
+}
+
+.menu {
+  @apply absolute right-0 mt-2 w-56 animate-fade-in rounded-xl border border-line bg-bg-elev p-1.5 shadow-pop;
+}
+
+.menuHead {
+  @apply px-3 py-2;
+}
+
+.menuName {
+  @apply truncate text-sm font-medium text-ink;
+}
+
+.menuEmail {
+  @apply truncate text-xs text-ink-faint;
+}
+
+.menuRoles {
+  @apply mt-1.5 flex flex-wrap gap-1;
+}
+
+.chip {
+  @apply inline-flex items-center rounded-full border border-line bg-bg-elev px-2 py-0.5 text-[11px] font-medium text-ink-dim;
+}
+
+.divider {
+  @apply my-1 h-px bg-line;
+}
+
+.logout {
+  @apply w-full rounded-lg px-3 py-2 text-left text-sm text-danger hover:bg-danger/10;
+}
+
+.main {
+  @apply w-full flex-1 px-6 py-6;
+}

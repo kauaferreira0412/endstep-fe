@@ -1,0 +1,27 @@
+.bar {
+  @apply mb-1 flex flex-wrap items-center gap-2 text-[11px];
+}
+
+.toggle {
+  @apply rounded border px-2 py-0.5 font-medium transition;
+}
+
+.toggleOff {
+  @apply border-line text-ink-faint hover:text-ink;
+}
+
+.toggleOn {
+  @apply border-brand/60 bg-brand/15 text-brand hover:brightness-110;
+}
+
+.loading {
+  @apply text-ink-faint;
+}
+
+.source {
+  @apply text-ink-faint;
+}
+
+.sourceNone {
+  @apply text-warn/80;
+}

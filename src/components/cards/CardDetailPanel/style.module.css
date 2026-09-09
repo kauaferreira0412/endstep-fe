@@ -1,0 +1,108 @@
+.overlay {
+  @apply fixed inset-0 z-30 flex justify-end bg-black/60 backdrop-blur-sm;
+}
+
+.panel {
+  @apply h-full w-full max-w-[720px] animate-slide-in overflow-y-auto border-l border-line bg-bg-soft p-6;
+}
+
+.close {
+  @apply mb-4 inline-flex items-center justify-center gap-2 rounded-lg border border-transparent
+    bg-transparent px-4 py-2 text-sm font-medium text-ink transition hover:bg-bg-elev/70;
+}
+
+.error {
+  @apply rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger;
+}
+
+.loading {
+  @apply text-sm text-ink-dim;
+}
+
+.name {
+  @apply text-xl font-semibold text-ink;
+}
+
+.mana {
+  @apply ml-1 text-sm font-normal text-ink-dim;
+}
+
+.typeLine {
+  @apply mt-0.5 text-sm text-ink-dim;
+}
+
+.row {
+  @apply mt-5 flex flex-wrap gap-6;
+}
+
+.art {
+  @apply w-[300px] rounded-xl border border-line;
+}
+
+.col {
+  @apply min-w-[260px] flex-1;
+}
+
+.oracle {
+  @apply whitespace-pre-wrap rounded-lg border border-line bg-bg-elev px-3.5 py-3 text-sm text-ink;
+}
+
+.section {
+  @apply mb-2 mt-6 text-[11px] font-semibold uppercase tracking-wider text-ink-faint;
+}
+
+.face {
+  @apply mb-3;
+}
+
+.faceName {
+  @apply font-semibold text-ink;
+}
+
+.faceMana {
+  @apply text-ink-dim;
+}
+
+.faceType {
+  @apply text-[13px] text-ink-dim;
+}
+
+.faceText {
+  @apply mt-1.5 whitespace-pre-wrap rounded-lg border border-line bg-bg-elev px-3 py-2 text-sm;
+}
+
+.legalities {
+  @apply flex flex-wrap gap-1.5;
+}
+
+.chip {
+  @apply inline-flex items-center rounded-full border border-line bg-bg-elev px-2 py-0.5 text-[11px] font-medium text-ink-dim;
+}
+
+.chipLegal {
+  @apply border-ok/50 text-ok;
+}
+
+.chipBanned {
+  @apply border-danger/50 text-danger;
+}
+
+.printings {
+  @apply divide-y divide-line;
+}
+
+.printingRow {
+  @apply flex justify-between py-1.5 text-[13px];
+}
+
+.printingMeta {
+  @apply text-ink-faint;
+}
+
+.ruling {
+  @apply mb-1.5 text-[13px] text-ink;
+}
+
+.rulingDate {
+  @apply text-ink-faint;
+}

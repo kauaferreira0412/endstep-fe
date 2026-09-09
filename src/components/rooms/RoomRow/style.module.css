@@ -1,0 +1,52 @@
+.button {
+  @apply flex w-full items-center gap-3 rounded-xl border border-line/60 bg-bg-elev/40
+    px-3.5 py-3 text-left transition hover:border-brand/50 hover:bg-bg-elev/70;
+}
+
+.body {
+  @apply min-w-0 flex-1;
+}
+
+.titleRow {
+  @apply flex items-center gap-2;
+}
+
+.name {
+  @apply truncate text-sm font-semibold text-ink;
+}
+
+.lock {
+  @apply text-xs text-ink-faint;
+}
+
+.metaRow {
+  @apply mt-0.5 flex items-center gap-2 text-[11px] text-ink-faint;
+}
+
+.format {
+  @apply rounded border border-line/70 px-1.5 py-px uppercase tracking-wide;
+}
+
+.seats {
+  @apply flex items-center gap-0.5;
+}
+
+.seat {
+  @apply h-1.5 w-1.5 rounded-full bg-line;
+}
+
+.seatTaken {
+  @apply bg-brand;
+}
+
+.count {
+  @apply ml-1;
+}
+
+.cta {
+  @apply shrink-0 rounded-lg bg-brand/15 px-3 py-1.5 text-xs font-medium text-brand transition group-hover:bg-brand/25;
+}
+
+.ctaFull {
+  @apply shrink-0 rounded-lg px-3 py-1.5 text-xs font-medium text-ink-faint;
+}
