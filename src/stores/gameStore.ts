@@ -36,12 +36,15 @@ interface GameState {
   lookTop: { mode: "scry" | "surveil" | "free"; cardIds: number[] } | null;
   /** modal "criar ficha" aberto */
   tokenModalOpen: boolean;
+  /** modal "adicionar carta do banco" aberto */
+  addCardModalOpen: boolean;
 
   connect: (gameId: number) => void;
   disconnect: () => void;
   clearCascadeHit: () => void;
   clearLookTop: () => void;
   setTokenModalOpen: (open: boolean) => void;
+  setAddCardModalOpen: (open: boolean) => void;
 
   // acoes
   draw: (count?: number) => void;
@@ -78,6 +81,7 @@ interface GameState {
     count?: number;
   }) => void;
   copyCard: (cardId: number, count?: number) => void;
+  addCard: (oracleId: string, zone: "BATTLEFIELD" | "HAND", count?: number) => void;
   revealCard: (cardId: number) => void;
   hideCard: (cardId: number) => void;
   passTurn: () => void;
@@ -188,10 +192,12 @@ export const useGameStore = create<GameState>((set, get) => {
     cascadeHit: null,
     lookTop: null,
     tokenModalOpen: false,
+    addCardModalOpen: false,
 
     clearCascadeHit: () => set({ cascadeHit: null }),
     clearLookTop: () => set({ lookTop: null }),
     setTokenModalOpen: (open) => set({ tokenModalOpen: open }),
+    setAddCardModalOpen: (open) => set({ addCardModalOpen: open }),
 
     connect: (gameId) => {
       get().socket?.disconnect();
@@ -210,6 +216,7 @@ export const useGameStore = create<GameState>((set, get) => {
         cascadeHit: null,
         lookTop: null,
         tokenModalOpen: false,
+        addCardModalOpen: false,
         lastSequence: 0,
         turn: null,
       });
@@ -246,6 +253,7 @@ export const useGameStore = create<GameState>((set, get) => {
     surveil: (count) => send("LOOK_TOP", { count, mode: "surveil" }),
     lookTopResolve: (decisions) => send("LOOK_TOP_RESOLVE", { decisions }),
     createToken: (opts) => send("CREATE_TOKEN", { count: 1, ...opts }),
+    addCard: (oracleId, zone, count = 1) => send("ADD_CARD", { oracleId, zone, count }),
     copyCard: (cardId, count = 1) => send("COPY_CARD", { cardId, count }),
     revealCard: (cardId) => send("REVEAL_CARD", { cardId }),
     hideCard: (cardId) => send("HIDE_CARD", { cardId }),

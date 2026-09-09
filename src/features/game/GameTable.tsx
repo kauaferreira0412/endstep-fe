@@ -11,6 +11,7 @@ import { HandRail } from "./HandRail";
 import { LookTopModal } from "./LookTopModal";
 import { PlayerMat } from "./PlayerMat";
 import { TokenModal } from "./TokenModal";
+import { AddCardModal } from "@/components/game/AddCardModal/container";
 import { TurnBar } from "./TurnBar";
 import { ZoneBrowser } from "./ZoneBrowser";
 import { playTurnChime } from "./turnSound";
@@ -262,6 +263,7 @@ export function GameTable() {
       <CascadeModal />
       <LookTopModal />
       <TokenModal />
+      <AddCardModal />
       {menu && <CardContextMenu x={menu.x} y={menu.y} card={menu.card} onClose={() => setMenu(null)} />}
       {browse && (
         <ZoneBrowser zone={browse.zone} ownerUserId={browse.ownerUserId} onClose={() => setBrowse(null)} />

@@ -33,6 +33,7 @@ const TYPE_ORDER = [
 export function DeckBuilder({ detail }: { detail: DeckDetail }) {
   const { patchDeck, applyCards, savingCards, setDetail } = useDeckStore();
   const [showAdd, setShowAdd] = useState(true);
+  const [deckFilter, setDeckFilter] = useState("");
   const [artCard, setArtCard] = useState<DeckCardView | null>(null);
   const [viewOracleId, setViewOracleId] = useState<string | null>(null);
   const [suggestOpen, setSuggestOpen] = useState(false);
@@ -180,10 +181,24 @@ export function DeckBuilder({ detail }: { detail: DeckDetail }) {
 
       {/* body */}
       <div className="grid min-h-0 grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1fr)_360px]">
-        <div className="grid min-h-0 grid-rows-[1fr_auto] gap-3">
+        <div className="grid min-h-0 grid-rows-[auto_1fr_auto] gap-3">
+          <input
+            className="input !py-1.5 text-sm"
+            placeholder="Filtrar cartas do deck por nome ou tipo (ex.: Creature, Land, Elf)…"
+            value={deckFilter}
+            onChange={(e) => setDeckFilter(e.target.value)}
+          />
           <div className="card min-h-0 overflow-y-auto p-4">
             {sectionsToShow.map((section) => {
-              const cards = bySection[section];
+              const f = deckFilter.trim().toLowerCase();
+              const cards = f
+                ? bySection[section].filter(
+                    (c) =>
+                      c.name.toLowerCase().includes(f) ||
+                      (c.typeLine ?? "").toLowerCase().includes(f),
+                  )
+                : bySection[section];
+              if (f && cards.length === 0) return null;
               if (cards.length === 0 && section !== "MAINBOARD" && section !== "COMMANDER") return null;
               if (cards.length === 0 && section === "COMMANDER" && !uses) return null;
               return (

@@ -12,8 +12,18 @@ interface Props {
 }
 
 export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) {
-  const { draw, drawHand, mulligan, cascade, discover, mill, scry, surveil, setTokenModalOpen } =
-    useGameStore();
+  const {
+    draw,
+    drawHand,
+    mulligan,
+    cascade,
+    discover,
+    mill,
+    scry,
+    surveil,
+    setTokenModalOpen,
+    setAddCardModalOpen,
+  } = useGameStore();
   const previewShow = useHoverStore((s) => s.show);
   const sorted = [...cards].sort((a, b) => a.position - b.position);
 
@@ -86,6 +96,15 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
               }}
             >
               Criar ficha…
+            </button>
+            <button
+              className="block w-full rounded px-2 py-1.5 text-left text-xs text-ink hover:bg-brand-soft"
+              onClick={() => {
+                setMenuOpen(false);
+                setAddCardModalOpen(true);
+              }}
+            >
+              Adicionar carta (do banco)…
             </button>
           </div>
         )}
