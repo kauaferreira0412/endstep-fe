@@ -67,6 +67,10 @@
   @apply truncate text-xs text-ink-faint;
 }
 
+.menuId {
+  @apply mt-0.5 truncate text-[11px] font-medium text-brand;
+}
+
 .menuRoles {
   @apply mt-1.5 flex flex-wrap gap-1;
 }

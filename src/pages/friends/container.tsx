@@ -1,9 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { useAuthStore } from "@/stores/authStore";
 import { useSocialStore } from "@/stores/socialStore";
 import { FriendsView } from "./index";
 
 export function FriendsPage() {
   const { friends, loadingFriends, loadFriends, addFriend, removeFriend } = useSocialStore();
+  const me = useAuthStore((s) => s.user);
   const [query, setQuery] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +36,8 @@ export function FriendsPage() {
       query={query}
       busy={busy}
       error={error}
+      myUsername={me?.username}
+      myId={me?.id}
       onQueryChange={setQuery}
       onSubmit={onSubmit}
       onRemove={(id) => void removeFriend(id)}

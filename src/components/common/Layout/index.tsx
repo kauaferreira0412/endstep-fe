@@ -82,6 +82,9 @@ export function LayoutView({
                 <div className={styles.menuHead}>
                   <div className={styles.menuName}>{user?.displayName}</div>
                   <div className={styles.menuEmail}>{user?.email}</div>
+                  <div className={styles.menuId}>
+                    @{user?.username} · ID #{user?.id}
+                  </div>
                   <div className={styles.menuRoles}>
                     {user?.roles.map((r) => (
                       <span key={r} className={styles.chip}>

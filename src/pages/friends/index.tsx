@@ -19,6 +19,8 @@ export interface FriendsViewProps {
   query: string;
   busy: boolean;
   error: string | null;
+  myUsername?: string;
+  myId?: number;
   onQueryChange: (v: string) => void;
   onSubmit: (e: FormEvent) => void;
   onRemove: (userId: number) => void;
@@ -30,6 +32,8 @@ export function FriendsView({
   query,
   busy,
   error,
+  myUsername,
+  myId,
   onQueryChange,
   onSubmit,
   onRemove,
@@ -41,6 +45,9 @@ export function FriendsView({
         Adicione por <b>@username</b> ou pelo <b>ID</b> do usuário. Depois você pode sugerir decks
         para eles.
       </p>
+      <div className={styles.me}>
+        Para te adicionarem, passe: <b>@{myUsername}</b> ou <b>ID #{myId}</b>
+      </div>
 
       <form className={styles.form} onSubmit={onSubmit}>
         <input
