@@ -56,8 +56,11 @@ export function GameTable() {
   }, [gameId, connect, disconnect]);
 
   const me = meUserId ?? authUser?.id ?? null;
+  const myPlayer = me != null ? players[me] : undefined;
+  const iAmOut = !!myPlayer && myPlayer.status !== "PLAYING";
+  const iAmEliminated = !!myPlayer && myPlayer.status === "LOST" && myPlayer.life <= 0;
   const selected = selectedId != null ? cards[selectedId] ?? null : null;
-  useGameShortcuts(selected);
+  useGameShortcuts(selected, iAmOut);
 
   // aviso (som + toast) quando VIRA a vez do jogador
   const prevActive = useRef<number | null | undefined>(undefined);
@@ -103,6 +106,7 @@ export function GameTable() {
 
   function openMenu(e: React.MouseEvent, card: GameCard) {
     e.preventDefault();
+    if (iAmOut) return;
     setSelectedId(card.id);
     setMenu({ x: e.clientX, y: e.clientY, card });
   }
@@ -126,17 +130,26 @@ export function GameTable() {
     : null;
 
   const BANNER_H = 26;
-  const banner: { text: string; tone: "warn" | "info" } | null = !iAmPlayer
+  const banner: { text: string; tone: "warn" | "info" | "danger" } | null = iAmOut
     ? {
-        text: "👁 Você está assistindo · para jogar, volte ao lobby e clique em “Sentar à mesa”.",
-        tone: "info",
+        text: iAmEliminated
+          ? "☠ Você foi eliminado — agora só assiste à partida."
+          : myPlayer?.status === "LEFT"
+            ? "Você saiu da partida — agora só assiste."
+            : "Você desistiu — agora só assiste à partida.",
+        tone: "danger",
       }
-    : myCardTotal === 0
+    : !iAmPlayer
       ? {
-          text: "Sua partida entrou sem cartas — o deck escolhido está vazio. Volte ao lobby e escolha um deck com cartas.",
-          tone: "warn",
+          text: "👁 Você está assistindo · para jogar, volte ao lobby e clique em “Sentar à mesa”.",
+          tone: "info",
         }
-      : null;
+      : myCardTotal === 0
+        ? {
+            text: "Sua partida entrou sem cartas — o deck escolhido está vazio. Volte ao lobby e escolha um deck com cartas.",
+            tone: "warn",
+          }
+        : null;
   const topOffset = 36 + (banner ? BANNER_H : 0);
 
   return (
@@ -193,7 +206,11 @@ export function GameTable() {
       {banner && (
         <div
           className={`absolute inset-x-0 z-30 flex items-center justify-center px-3 text-center text-[11px] ${
-            banner.tone === "warn" ? "bg-warn/15 text-warn" : "bg-brand/15 text-brand"
+            banner.tone === "danger"
+              ? "bg-danger/20 font-semibold text-danger"
+              : banner.tone === "warn"
+                ? "bg-warn/15 text-warn"
+                : "bg-brand/15 text-brand"
           }`}
           style={{ top: 36, height: BANNER_H }}
         >
@@ -208,7 +225,7 @@ export function GameTable() {
           left: 0,
           right: chatOpen ? 296 : 0,
           top: topOffset,
-          bottom: iAmPlayer ? "132px" : "0px",
+          bottom: iAmPlayer && !iAmOut ? "132px" : "0px",
           gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
           // com 2 jogadores empilhados, meu quadrante (embaixo) ganha mais altura
           gridTemplateRows:
@@ -224,6 +241,7 @@ export function GameTable() {
             <PlayerMat
               player={p}
               isMe={p.userId === me}
+              meLocked={iAmOut}
               isActive={turn?.activeUserId === p.userId}
               others={playerList.filter((o) => o.userId !== p.userId)}
               cardsOf={cardsOf}
@@ -245,7 +263,7 @@ export function GameTable() {
       {chatOpen && (
         <div
           className={`absolute right-0 z-30 flex w-[292px] flex-col border-l border-line bg-bg/95 p-2 ${
-            iAmPlayer ? "bottom-[132px]" : "bottom-0"
+            iAmPlayer && !iAmOut ? "bottom-[132px]" : "bottom-0"
           }`}
           style={{ top: topOffset }}
         >
@@ -253,8 +271,8 @@ export function GameTable() {
         </div>
       )}
 
-      {/* minha mão (só jogador) */}
-      {iAmPlayer && (
+      {/* minha mão (só jogador ativo) */}
+      {iAmPlayer && !iAmOut && (
         <div className="absolute inset-x-0 bottom-0 z-40 h-[132px]">
           <HandRail
             cards={cardsOf(me, "HAND")}

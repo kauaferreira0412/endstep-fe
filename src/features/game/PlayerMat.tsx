@@ -18,6 +18,7 @@ interface Props {
   onOpenZone: (zone: Zone, ownerUserId: number) => void;
   focused: boolean;
   onToggleFocus: () => void;
+  meLocked?: boolean;
 }
 
 function clamp(v: number, lo: number, hi: number) {
@@ -38,6 +39,7 @@ export function PlayerMat({
   onOpenZone,
   focused,
   onToggleFocus,
+  meLocked,
 }: Props) {
   const s = useGameStore();
   const [zoom, setZoom] = useState(1);
@@ -54,19 +56,37 @@ export function PlayerMat({
   }
 
   const gone = player.status === "LEFT" || player.status === "LOST";
+  const eliminated = player.status === "LOST" && player.life <= 0;
+  const canControl = isMe && !meLocked;
+  const bannerText =
+    player.status === "LEFT"
+      ? `${player.username} saiu da partida`
+      : eliminated
+        ? `${player.username} foi eliminado`
+        : `${player.username} desistiu`;
 
   return (
     <div
       className={`relative h-full w-full overflow-hidden border-2 ${
-        isActive ? "border-brand" : isMe ? "border-line" : "border-line/40"
+        eliminated
+          ? "border-danger/70"
+          : isActive
+            ? "border-brand"
+            : isMe
+              ? "border-line"
+              : "border-line/40"
       } ${gone ? "opacity-60 grayscale" : ""}`}
     >
       {gone && (
         <div className="pointer-events-none absolute inset-0 z-30 flex items-start justify-center pt-10">
-          <span className="rounded-full border border-danger/50 bg-bg/90 px-3 py-1 text-xs font-semibold text-danger shadow-glow">
-            {player.status === "LEFT"
-              ? `${player.username} saiu da partida`
-              : `${player.username} desistiu`}
+          <span
+            className={`rounded-full border bg-bg/90 px-3 py-1 text-xs font-semibold shadow-glow ${
+              eliminated || player.status === "LEFT"
+                ? "border-danger/60 text-danger"
+                : "border-warn/60 text-warn"
+            }`}
+          >
+            {bannerText}
           </span>
         </div>
       )}
@@ -80,7 +100,12 @@ export function PlayerMat({
         {player.status === "LEFT" && (
           <span className="rounded bg-danger/20 px-1 text-[10px] font-semibold text-danger">saiu</span>
         )}
-        {player.status === "LOST" && (
+        {eliminated && (
+          <span className="rounded bg-danger/25 px-1 text-[10px] font-bold text-danger">
+            eliminado
+          </span>
+        )}
+        {player.status === "LOST" && !eliminated && (
           <span className="rounded bg-warn/20 px-1 text-[10px] font-semibold text-warn">
             desistiu
           </span>
@@ -208,10 +233,10 @@ export function PlayerMat({
           <Battlefield
             cards={cardsOf(player.userId, "BATTLEFIELD")}
             cardWidth={Math.round((isMe ? 108 : 88) * zoom)}
-            interactive={isMe}
+            interactive={canControl}
             onContextMenu={onContextMenu}
             onDropCard={
-              isMe
+              canControl
                 ? (id, x, y) => {
                     const c = cardById(id);
                     if (c && c.zone === "BATTLEFIELD") s.setPosition(id, x, y);
@@ -248,7 +273,7 @@ export function PlayerMat({
                 zone={zone}
                 label={label}
                 cards={cardsOf(player.userId, zone)}
-                mine={isMe}
+                mine={canControl}
                 big={focused}
                 onOpen={() => onOpenZone(zone, player.userId)}
               />

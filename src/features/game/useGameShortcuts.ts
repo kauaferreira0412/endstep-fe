@@ -3,10 +3,11 @@ import { useGameStore } from "@/stores/gameStore";
 import type { GameCard } from "@/types/game";
 
 /** Atalhos da mesa (endstep.txt secao 58). Agem sobre a carta selecionada. */
-export function useGameShortcuts(selected: GameCard | null) {
+export function useGameShortcuts(selected: GameCard | null, disabled = false) {
   const s = useGameStore();
 
   useEffect(() => {
+    if (disabled) return;
     function onKey(e: KeyboardEvent) {
       const el = e.target as HTMLElement;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.isContentEditable)) return;
@@ -39,5 +40,5 @@ export function useGameShortcuts(selected: GameCard | null) {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [selected, s]);
+  }, [selected, s, disabled]);
 }
