@@ -102,6 +102,8 @@ export interface DeckDetail {
   cards: DeckCardView[];
   stats: DeckStats;
   validation: ValidationResult;
+  suggestedByUserId: number | null;
+  suggestedByUsername: string | null;
   createdAt: string | null;
   updatedAt: string | null;
 }

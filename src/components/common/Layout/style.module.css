@@ -22,6 +22,11 @@
   @apply bg-bg-elev text-ink;
 }
 
+.badge {
+  @apply ml-1.5 inline-flex min-w-[16px] items-center justify-center rounded-full bg-brand px-1
+    text-[10px] font-bold leading-4 text-white;
+}
+
 .userWrap {
   @apply relative ml-auto;
 }

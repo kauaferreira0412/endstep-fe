@@ -7,6 +7,8 @@ import { Dialogs } from "@/components/common/Dialogs/container";
 import { CardSearchPage } from "@/pages/cards/container";
 import { SyncPage } from "@/pages/sync/container";
 import { AdminUsersPage } from "@/pages/admin-users/container";
+import { FriendsPage } from "@/pages/friends/container";
+import { SuggestionsPage } from "@/pages/suggestions/container";
 import { LoginPage } from "@/pages/login/container";
 import { RegisterPage } from "@/pages/register/container";
 import { AuthCallbackPage } from "@/pages/auth-callback/container";
@@ -42,6 +44,8 @@ const router = createBrowserRouter([
       { path: "decks", element: <DecksPage /> },
       { path: "play", element: <RoomsPage /> },
       { path: "play/:code", element: <RoomLobby /> },
+      { path: "friends", element: <FriendsPage /> },
+      { path: "suggestions", element: <SuggestionsPage /> },
       {
         path: "admin/sync",
         element: (

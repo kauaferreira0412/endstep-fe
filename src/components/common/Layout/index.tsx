@@ -11,6 +11,7 @@ export interface LayoutViewProps {
   user: AuthUser | null;
   isAdmin: boolean;
   canSync: boolean;
+  unread: number;
   initials: string;
   menuOpen: boolean;
   menuRef: RefObject<HTMLDivElement>;
@@ -22,6 +23,7 @@ export function LayoutView({
   user,
   isAdmin,
   canSync,
+  unread,
   initials,
   menuOpen,
   menuRef,
@@ -42,6 +44,13 @@ export function LayoutView({
             </NavLink>
             <NavLink to="/play" className={navLinkClass}>
               Jogar
+            </NavLink>
+            <NavLink to="/friends" className={navLinkClass}>
+              Amigos
+            </NavLink>
+            <NavLink to="/suggestions" className={navLinkClass}>
+              Sugeridos
+              {unread > 0 && <span className={styles.badge}>{unread}</span>}
             </NavLink>
             {canSync && (
               <NavLink to="/admin/sync" className={navLinkClass}>

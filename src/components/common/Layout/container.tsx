@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
+import { useSocialStore } from "@/stores/socialStore";
 import { LayoutView } from "./index";
 
 export function Layout() {
@@ -12,6 +13,8 @@ export function Layout() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const unread = useSocialStore((s) => s.unread);
+  const refreshCount = useSocialStore((s) => s.refreshCount);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
@@ -20,6 +23,12 @@ export function Layout() {
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
+  useEffect(() => {
+    void refreshCount();
+    const t = setInterval(() => void refreshCount(), 60000);
+    return () => clearInterval(t);
+  }, [refreshCount]);
 
   const initials =
     user?.displayName
@@ -40,6 +49,7 @@ export function Layout() {
       user={user}
       isAdmin={hasRole("ADMIN")}
       canSync={canAccess({ permission: "SYNC" })}
+      unread={unread}
       initials={initials}
       menuOpen={menuOpen}
       menuRef={menuRef}

@@ -9,6 +9,7 @@ import { DeckStatsPanel } from "./DeckStatsPanel";
 import { AddCardsPanel } from "./AddCardsPanel";
 import { ArtPicker } from "./ArtPicker";
 import { CardDetailPanel } from "@/components/cards/CardDetailPanel/container";
+import { SuggestDeckModal } from "@/components/decks/SuggestDeckModal/container";
 
 const SECTION_LABEL: Record<Section, string> = {
   COMMANDER: "Comandante",
@@ -34,6 +35,7 @@ export function DeckBuilder({ detail }: { detail: DeckDetail }) {
   const [showAdd, setShowAdd] = useState(true);
   const [artCard, setArtCard] = useState<DeckCardView | null>(null);
   const [viewOracleId, setViewOracleId] = useState<string | null>(null);
+  const [suggestOpen, setSuggestOpen] = useState(false);
 
   const bySection = useMemo(() => {
     const map: Record<Section, DeckCardView[]> = {
@@ -119,8 +121,23 @@ export function DeckBuilder({ detail }: { detail: DeckDetail }) {
         {detail.folderPath.length > 0 && (
           <span className="text-xs text-ink-faint">{detail.folderPath.join(" / ")}</span>
         )}
+        {detail.suggestedByUsername && (
+          <span
+            className="rounded-full border border-brand/40 bg-brand/10 px-2 py-0.5 text-[11px] text-brand"
+            title="Deck sugerido por um amigo"
+          >
+            ↗ sugerido por {detail.suggestedByUsername}
+          </span>
+        )}
 
         <div className="ml-auto flex items-center gap-2">
+          <button
+            className="btn !py-1.5 text-sm"
+            onClick={() => setSuggestOpen(true)}
+            title="Sugerir este deck para um amigo"
+          >
+            ↗ Sugerir
+          </button>
           <span className="rounded-lg border border-line bg-bg-input/60 px-2.5 py-1.5 text-sm text-ink-dim">
             ◈ Commander
           </span>
@@ -223,6 +240,14 @@ export function DeckBuilder({ detail }: { detail: DeckDetail }) {
           deckName={detail.name}
           onDownload={() => void doExport("txt")}
           onClose={() => setTxtView(null)}
+        />
+      )}
+
+      {suggestOpen && (
+        <SuggestDeckModal
+          deckId={detail.id}
+          deckName={detail.name}
+          onClose={() => setSuggestOpen(false)}
         />
       )}
     </div>

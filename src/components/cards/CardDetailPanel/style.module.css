@@ -32,11 +32,14 @@
 }
 
 .row {
-  @apply mt-5 flex flex-wrap gap-6;
+  @apply mt-5 flex flex-wrap items-start gap-6;
 }
 
 .art {
-  @apply w-[300px] rounded-xl border border-line;
+  @apply w-[300px] max-w-full shrink-0 self-start rounded-xl border border-line;
+  height: auto;
+  aspect-ratio: 488 / 680;
+  object-fit: contain;
 }
 
 .col {

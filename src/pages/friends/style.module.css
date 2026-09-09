@@ -1,0 +1,62 @@
+.root {
+  @apply mx-auto max-w-2xl;
+}
+
+.title {
+  @apply text-lg font-semibold text-ink;
+}
+
+.intro {
+  @apply mt-1 text-sm text-ink-dim;
+}
+
+.form {
+  @apply mt-4 flex gap-2;
+}
+
+.input {
+  @apply w-full rounded-lg border border-line bg-bg-input px-3.5 py-2.5 text-sm text-ink
+    placeholder:text-ink-faint focus:border-brand/55 focus:outline-none focus:ring-2 focus:ring-brand/25;
+}
+
+.add {
+  @apply inline-flex shrink-0 items-center justify-center gap-2 rounded-lg border border-brand/60
+    bg-brand/25 px-4 py-2 text-sm font-medium text-ink transition hover:bg-brand/35
+    disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+.error {
+  @apply mt-3 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-sm text-danger;
+}
+
+.empty {
+  @apply mt-6 rounded-xl border border-dashed border-line/70 py-8 text-center text-sm text-ink-dim;
+}
+
+.list {
+  @apply mt-5 space-y-2;
+}
+
+.row {
+  @apply flex items-center gap-3 rounded-lg border border-line bg-bg-elev/50 px-3 py-2.5;
+}
+
+.avatar {
+  @apply grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand/25 text-xs font-bold text-brand;
+}
+
+.avatarImg {
+  @apply h-9 w-9 shrink-0 rounded-full object-cover;
+}
+
+.name {
+  @apply text-sm font-medium text-ink;
+}
+
+.handle {
+  @apply text-[11px] text-ink-faint;
+}
+
+.remove {
+  @apply ml-auto rounded-lg border border-line px-2.5 py-1 text-xs text-ink-faint transition hover:border-danger/50 hover:text-danger;
+}

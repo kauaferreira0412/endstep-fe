@@ -25,6 +25,7 @@ import type {
 } from "@/types/deck";
 import type { AdminUser, PermissionCatalogItem } from "@/types/admin";
 import type { CustomArt, CustomArtParams } from "@/types/customArt";
+import type { DeckSuggestion, Friend, SuggestionCardLine } from "@/types/social";
 import type { CreateRoomInput, Room, RoomSummary } from "@/types/room";
 import type { GameSnapshot, LogLine } from "@/types/game";
 
@@ -294,6 +295,27 @@ export const api = {
     http(`/api/rooms/${code}/start`, { method: "POST" }),
   sitAtTable: (code: string): Promise<{ gameId: number | null }> =>
     http(`/api/rooms/${code}/sit`, { method: "POST" }),
+
+  // -------- amigos / sugestões --------
+  friends: (): Promise<Friend[]> => http("/api/friends"),
+  addFriend: (query: string): Promise<Friend> =>
+    http("/api/friends", { method: "POST", body: JSON.stringify({ query }) }),
+  removeFriend: (userId: number): Promise<void> =>
+    http(`/api/friends/${userId}`, { method: "DELETE" }),
+
+  suggestions: (): Promise<DeckSuggestion[]> => http("/api/suggestions"),
+  suggestionCount: (): Promise<{ unread: number }> => http("/api/suggestions/count"),
+  suggestionCards: (id: number): Promise<SuggestionCardLine[]> =>
+    http(`/api/suggestions/${id}/cards`),
+  suggestDeck: (deckId: number, toUserId: number, message?: string): Promise<void> =>
+    http("/api/suggestions", {
+      method: "POST",
+      body: JSON.stringify({ deckId, toUserId, message: message ?? null }),
+    }),
+  importSuggestion: (id: number): Promise<DeckDetail> =>
+    http(`/api/suggestions/${id}/import`, { method: "POST" }),
+  dismissSuggestion: (id: number): Promise<void> =>
+    http(`/api/suggestions/${id}`, { method: "DELETE" }),
 
   gameSnapshot: (id: number): Promise<GameSnapshot> => http(`/api/games/${id}`),
   gameHistory: (id: number, limit = 200): Promise<LogLine[]> =>

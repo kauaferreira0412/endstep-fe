@@ -1,0 +1,65 @@
+.overlay {
+  @apply fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm;
+}
+
+.modal {
+  @apply w-full max-w-sm animate-fade-in rounded-xl border border-line/70 p-5 shadow-card;
+  background-image: linear-gradient(180deg, #2a2a52 0%, #232343 100%);
+}
+
+.head {
+  @apply flex items-center justify-between;
+}
+
+.title {
+  @apply text-sm font-semibold text-ink;
+}
+
+.close {
+  @apply text-xs text-ink-faint hover:text-ink;
+}
+
+.deckName {
+  @apply mt-0.5 text-[11px] text-ink-faint;
+}
+
+.label {
+  @apply mb-1 mt-4 block text-[11px] font-medium uppercase tracking-wide text-ink-dim;
+}
+
+.select {
+  @apply w-full rounded-lg border border-line bg-bg-input px-3 py-2 text-sm text-ink
+    focus:border-brand/55 focus:outline-none focus:ring-2 focus:ring-brand/25;
+}
+
+.textarea {
+  @apply w-full rounded-lg border border-line bg-bg-input px-3 py-2 text-sm text-ink
+    placeholder:text-ink-faint focus:border-brand/55 focus:outline-none focus:ring-2 focus:ring-brand/25;
+}
+
+.noFriends {
+  @apply mt-3 rounded-lg border border-line/60 bg-bg-input/40 px-3 py-2 text-[12px] text-ink-dim;
+}
+
+.error {
+  @apply mt-3 rounded-lg border border-danger/40 bg-danger/10 px-3 py-2 text-[13px] text-danger;
+}
+
+.ok {
+  @apply mt-3 rounded-lg border border-ok/40 bg-ok/10 px-3 py-2 text-[13px] text-ok;
+}
+
+.actions {
+  @apply mt-4 flex justify-end gap-2;
+}
+
+.primary {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-brand/60 bg-brand/25
+    px-4 py-2 text-sm font-medium text-ink transition hover:bg-brand/35
+    disabled:cursor-not-allowed disabled:opacity-40;
+}
+
+.ghost {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg border border-transparent
+    px-4 py-2 text-sm font-medium text-ink-faint transition hover:bg-bg-elev/70;
+}
