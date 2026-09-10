@@ -124,6 +124,38 @@ export function CardContextMenu({ x, y, card, onClose }: Props) {
                 });
             }}
           />
+          {Object.entries(card.counters ?? {}).filter(([, v]) => v).length > 0 && (
+            <>
+              <div className="my-1 h-px bg-line" />
+              {Object.entries(card.counters ?? {})
+                .filter(([, v]) => v)
+                .map(([k, v]) => (
+                  <div key={k} className="flex items-center gap-1 px-1">
+                    <span className="flex-1 truncate text-[11px] text-ink-faint" title={k}>
+                      {k}: {v}
+                    </span>
+                    <button
+                      className="rounded px-1.5 py-0.5 text-xs text-ink-dim hover:bg-bg hover:text-ink"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        act(() => s.cardCounter(card.id, k, -1));
+                      }}
+                    >
+                      −1
+                    </button>
+                    <button
+                      className="rounded px-1.5 py-0.5 text-xs text-danger hover:bg-bg"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        act(() => s.cardCounter(card.id, k, -(v as number)));
+                      }}
+                    >
+                      zerar
+                    </button>
+                  </div>
+                ))}
+            </>
+          )}
           <div className="my-1 h-px bg-line" />
           {MOVES.map((m) => (
             <Item

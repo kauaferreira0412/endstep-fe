@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { useGameStore } from "@/stores/gameStore";
 import { useHoverStore } from "@/stores/hoverStore";
 import type { GameCard } from "@/types/game";
 
@@ -59,6 +60,9 @@ export function GameCardView({
   const tokenBorder = tintFor(card.identity?.tokenColors ?? card.identity?.colorIdentity ?? "");
 
   const previewShow = useHoverStore((s) => s.show);
+  const cardCounter = useGameStore((s) => s.cardCounter);
+  const meUserId = useGameStore((s) => s.meUserId);
+  const canEditCounters = card.ownerUserId === meUserId || card.controllerUserId === meUserId;
 
   function handleClick(e: React.MouseEvent) {
     if (e.altKey) {
@@ -111,8 +115,32 @@ export function GameCardView({
           {counters.map(([k, v]) => (
             <span
               key={k}
-              className="rounded bg-black/80 px-1 text-[9px] font-bold leading-tight text-white"
-              title={k}
+              role={canEditCounters ? "button" : undefined}
+              className={`rounded bg-black/80 px-1 text-[9px] font-bold leading-tight text-white ${
+                canEditCounters ? "cursor-pointer hover:bg-black" : ""
+              }`}
+              title={
+                canEditCounters
+                  ? `${k}: ${v} — clique +1, botão direito zera`
+                  : `${k}: ${v}`
+              }
+              onClick={
+                canEditCounters
+                  ? (e) => {
+                      e.stopPropagation();
+                      cardCounter(card.id, k, 1);
+                    }
+                  : undefined
+              }
+              onContextMenu={
+                canEditCounters
+                  ? (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      cardCounter(card.id, k, -(v as number));
+                    }
+                  : undefined
+              }
             >
               {v}
             </span>
