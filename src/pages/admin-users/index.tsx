@@ -18,7 +18,9 @@ export interface AdminUsersViewProps {
   loading: boolean;
   error: string | null;
   savingId: number | null;
+  deletingId: number | null;
   onTogglePermission: (userId: number, code: string, next: boolean) => void;
+  onDeleteUser: (userId: number) => void;
 }
 
 export function AdminUsersView({
@@ -27,7 +29,9 @@ export function AdminUsersView({
   loading,
   error,
   savingId,
+  deletingId,
   onTogglePermission,
+  onDeleteUser,
 }: AdminUsersViewProps) {
   return (
     <div>
@@ -53,6 +57,7 @@ export function AdminUsersView({
                     {p.label}
                   </th>
                 ))}
+                <th className={styles.th}></th>
               </tr>
             </thead>
             <tbody>
@@ -99,6 +104,17 @@ export function AdminUsersView({
                         )}
                       </td>
                     ))}
+                    <td className={styles.permCell}>
+                      {!isAdmin && (
+                        <button
+                          className={styles.deleteBtn}
+                          disabled={deletingId === u.id}
+                          onClick={() => onDeleteUser(u.id)}
+                        >
+                          {deletingId === u.id ? "excluindo…" : "Excluir"}
+                        </button>
+                      )}
+                    </td>
                   </tr>
                 );
               })}

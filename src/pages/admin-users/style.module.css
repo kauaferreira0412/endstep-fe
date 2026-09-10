@@ -90,3 +90,7 @@
 .loading {
   @apply mt-6 text-sm text-ink-dim;
 }
+
+.deleteBtn {
+  @apply rounded-md border border-danger/40 px-2.5 py-1 text-[12px] font-medium text-danger transition-colors hover:bg-danger/15 disabled:opacity-50;
+}

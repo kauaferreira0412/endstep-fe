@@ -203,6 +203,8 @@ export const api = {
       method: "PUT",
       body: JSON.stringify({ permissions }),
     }),
+  deleteUser: (userId: number): Promise<void> =>
+    http(`/api/admin/users/${userId}`, { method: "DELETE" }),
 
   // -------- decks / folders / formats --------
   formats: (): Promise<Format[]> => http("/api/formats"),
