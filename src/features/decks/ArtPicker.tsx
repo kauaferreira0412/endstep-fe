@@ -67,10 +67,10 @@ export function ArtPicker({
       onClick={onClose}
     >
       <div
-        className="card flex max-h-[80vh] w-full max-w-2xl flex-col p-5"
+        className="card flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden p-5"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex shrink-0 items-center justify-between">
           <h2 className="text-base font-semibold text-ink">Arte de {cardName}</h2>
           <button className="btn btn-ghost !py-1.5 text-sm" onClick={() => setEditorOpen(true)}>
             ＋ Criar arte
@@ -80,7 +80,7 @@ export function ArtPicker({
         {loading ? (
           <p className="py-8 text-center text-sm text-ink-faint">Carregando…</p>
         ) : (
-          <div className="mt-4 grid grid-cols-3 gap-3 overflow-y-auto sm:grid-cols-4">
+          <div className="mt-4 grid min-h-0 flex-1 grid-cols-3 gap-3 overflow-y-auto pr-1 sm:grid-cols-4">
             <Tile
               label="Padrão"
               selected={!current.printingId && !current.customArtId}
