@@ -16,13 +16,17 @@ interface Props {
   pan?: { x: number; y: number };
   /** arrastar o fundo => pedir pan (dx/dy em px de tela). */
   onPan?: (dx: number, dy: number) => void;
+  /** zoom (1 = 100%). Abaixo de 1 só encolhe a carta (sem zona morta nas bordas);
+   * a partir de 1 escala a camada inteira (posição + tamanho), afastando as
+   * cartas entre si pra não sobrepor — nesse caso as bordas se alcançam com
+   * auto-pan durante o arraste. */
+  zoom?: number;
 }
 
 /**
- * Campo de batalha: SEMPRE ocupa 100% da área, de ponta a ponta, em qualquer
- * zoom (o mapeamento de fração 0..1 pro pixel nunca muda com o zoom — só o
- * tamanho da carta muda). Isso garante que dá pra soltar uma carta em
- * qualquer canto do campo, mesmo com zoom bem baixo ou bem alto.
+ * Campo de batalha: SEMPRE ocupa 100% da área. Modelo híbrido de zoom (ver
+ * prop `zoom`) pra evitar tanto sobreposição de cartas (zoom > 100%) quanto
+ * zona morta nas bordas (zoom < 100%).
  */
 export function Battlefield({
   cards,
@@ -35,9 +39,11 @@ export function Battlefield({
   multiSelected,
   pan = { x: 0, y: 0 },
   onPan,
+  zoom = 1,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const panRef = useRef<{ x: number; y: number } | null>(null);
+  const posScale = Math.max(zoom, 1);
 
   // expõe o onPan no próprio elemento DOM, pra que o arraste vindo de fora
   // (ex.: HandRail, que acha este elemento via elementsFromPoint) também
@@ -48,9 +54,13 @@ export function Battlefield({
 
   function frac(e: { clientX: number; clientY: number }) {
     const r = ref.current!.getBoundingClientRect();
+    const cx = r.width / 2;
+    const cy = r.height / 2;
+    const lx = cx + (e.clientX - r.left - cx - pan.x) / posScale;
+    const ly = cy + (e.clientY - r.top - cy - pan.y) / posScale;
     return {
-      x: Math.max(0.02, Math.min(0.98, (e.clientX - r.left - pan.x) / r.width)),
-      y: Math.max(0.03, Math.min(0.97, (e.clientY - r.top - pan.y) / r.height)),
+      x: Math.max(0.02, Math.min(0.98, lx / r.width)),
+      y: Math.max(0.03, Math.min(0.97, ly / r.height)),
     };
   }
 
@@ -91,6 +101,7 @@ export function Battlefield({
       data-battlefield-mine={interactive ? "true" : undefined}
       data-pan-x={pan.x}
       data-pan-y={pan.y}
+      data-pos-scale={posScale}
       className={`relative h-full w-full overflow-hidden rounded-lg border border-line bg-bg-elev/40 ${
         onPan ? "cursor-grab active:cursor-grabbing" : ""
       }`}
@@ -109,7 +120,7 @@ export function Battlefield({
     >
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ transform: `translate(${pan.x}px, ${pan.y}px)` }}
+        style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${posScale})` }}
       >
         {cards.map((c) => (
           <div
