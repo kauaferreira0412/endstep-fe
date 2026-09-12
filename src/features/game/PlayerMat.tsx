@@ -242,7 +242,7 @@ export function PlayerMat({
         <div className="min-w-0 flex-1" onWheel={onWheel}>
           <Battlefield
             cards={cardsOf(player.userId, "BATTLEFIELD")}
-            cardWidth={isMe ? 108 : 88}
+            cardWidth={isMe ? 92 : 76}
             zoom={zoom}
             interactive={canControl}
             multiSelected={isMe ? multiSelected : undefined}
@@ -265,7 +265,7 @@ export function PlayerMat({
 
         <div
           className={`flex shrink-0 flex-col gap-1.5 overflow-y-auto pr-0.5 ${
-            focused ? "w-[188px]" : "w-[104px]"
+            focused ? "w-[150px]" : "w-[80px]"
           }`}
         >
           {(
