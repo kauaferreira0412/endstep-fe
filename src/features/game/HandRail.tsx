@@ -31,8 +31,8 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
   const sorted = [...cards].sort((a, b) => a.position - b.position);
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [dragOverId, setDragOverId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const DRAG_OVER_CLASSES = ["outline", "outline-2", "outline-gold"];
   useEffect(() => {
     if (!menuOpen) return;
     const close = (e: MouseEvent) => {
@@ -136,14 +136,12 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
                 }
               }}
               onContextMenu={(e) => onContextMenu(e, c)}
-              onDragOver={(e) => {
-                e.preventDefault();
-                if (dragOverId !== c.id) setDragOverId(c.id);
-              }}
-              onDragLeave={() => setDragOverId((id) => (id === c.id ? null : id))}
+              onDragOver={(e) => e.preventDefault()}
+              onDragEnter={(e) => e.currentTarget.classList.add(...DRAG_OVER_CLASSES)}
+              onDragLeave={(e) => e.currentTarget.classList.remove(...DRAG_OVER_CLASSES)}
               onDrop={(e) => {
                 e.preventDefault();
-                setDragOverId(null);
+                e.currentTarget.classList.remove(...DRAG_OVER_CLASSES);
                 const draggedId = Number(e.dataTransfer.getData("text/card-id"));
                 if (!draggedId || draggedId === c.id) return;
                 const ids = sorted.map((x) => x.id);
@@ -158,7 +156,7 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
               }}
               className={`h-[132px] shrink-0 cursor-grab rounded-md object-contain transition-transform hover:-translate-y-2 ${
                 selectedId === c.id ? "-translate-y-2 ring-2 ring-brand" : ""
-              } ${dragOverId === c.id ? "outline outline-2 outline-gold" : ""}`}
+              }`}
             />
           );
         })}
