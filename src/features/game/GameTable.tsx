@@ -19,6 +19,7 @@ import { playTurnChime } from "./turnSound";
 import { useGameShortcuts } from "./useGameShortcuts";
 
 const SOUND_KEY = "endstep.turnSound";
+const HAND_ACTIONS_WIDTH = 132;
 
 /** Colunas/linhas do grid de mesas conforme o nº de jogadores. */
 function gridShape(n: number): { cols: number; rows: number } {
@@ -48,6 +49,8 @@ export function GameTable() {
     leaveGame,
     surrender,
     setTapped,
+    untapAll,
+    passTurn,
   } = useGameStore();
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -324,19 +327,41 @@ export function GameTable() {
         </div>
       )}
 
-      {/* minha mão (só jogador ativo) — encolhe quando o chat está aberto, nunca fica atrás dele */}
+      {/* minha mão (só jogador ativo) — encolhe quando o chat está aberto e deixa espaço fixo
+          pros botões de Desvirar tudo/Passar turno, que não se mexem com o chat */}
       {iAmPlayer && !iAmOut && (
-        <div
-          className="absolute bottom-0 z-40 h-[132px]"
-          style={{ left: 0, right: chatOpen ? 296 : 0 }}
-        >
-          <HandRail
-            cards={cardsOf(me, "HAND")}
-            onContextMenu={openMenu}
-            selectedId={selectedId}
-            onSelect={(c) => setSelectedId(c.id)}
-          />
-        </div>
+        <>
+          <div
+            className="absolute bottom-0 z-40 h-[132px]"
+            style={{ left: 0, right: (chatOpen ? 296 : 0) + HAND_ACTIONS_WIDTH }}
+          >
+            <HandRail
+              cards={cardsOf(me, "HAND")}
+              onContextMenu={openMenu}
+              selectedId={selectedId}
+              onSelect={(c) => setSelectedId(c.id)}
+            />
+          </div>
+          <div
+            className="absolute bottom-0 right-0 z-40 flex h-[132px] flex-col items-center justify-center gap-1 border-l border-t border-line bg-bg/90 px-3 backdrop-blur"
+            style={{ width: HAND_ACTIONS_WIDTH }}
+          >
+            <button
+              className="btn btn-ghost !py-1 text-[11px]"
+              onClick={untapAll}
+              title="Desvirar todas as suas cartas"
+            >
+              ⟳ Desvirar tudo
+            </button>
+            <button
+              className="btn btn-primary !py-1 text-[11px]"
+              onClick={passTurn}
+              title="Passar o turno"
+            >
+              ⏭ Passar turno
+            </button>
+          </div>
+        </>
       )}
 
       {/* barra de seleção múltipla (ctrl/cmd/shift+clique nas cartas do campo) */}

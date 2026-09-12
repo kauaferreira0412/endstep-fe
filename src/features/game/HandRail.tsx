@@ -36,8 +36,6 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
     setAddCardModalOpen,
     reorderHand,
     playCard,
-    untapAll,
-    passTurn,
   } = useGameStore();
   const previewShow = useHoverStore((s) => s.show);
   const sorted = [...cards].sort((a, b) => a.position - b.position);
@@ -273,19 +271,6 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
             />
           );
         })}
-      </div>
-
-      <div className="flex shrink-0 flex-col gap-1 self-center">
-        <button
-          className="btn btn-ghost !py-1 text-[11px]"
-          onClick={untapAll}
-          title="Desvirar todas as suas cartas"
-        >
-          ⟳ Desvirar tudo
-        </button>
-        <button className="btn btn-primary !py-1 text-[11px]" onClick={passTurn} title="Passar o turno">
-          ⏭ Passar turno
-        </button>
       </div>
     </div>
   );
