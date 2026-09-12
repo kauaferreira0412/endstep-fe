@@ -13,6 +13,8 @@ interface Props {
 
 const DRAG_THRESHOLD = 6;
 const DRAG_OVER_CLASSES = ["outline", "outline-2", "outline-gold"];
+const EDGE_ZONE = 44;
+const EDGE_PAN_SPEED = 16;
 
 interface DragState {
   cardId: number;
@@ -115,6 +117,20 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
         if (target) {
           target.classList.add(...DRAG_OVER_CLASSES);
           lastTargetRef.current = target;
+        }
+      }
+      if (bf) {
+        const onPan = (bf as unknown as { __endstepOnPan?: (dx: number, dy: number) => void })
+          .__endstepOnPan;
+        if (onPan) {
+          const r = bf.getBoundingClientRect();
+          let dx = 0;
+          let dy = 0;
+          if (e.clientX - r.left < EDGE_ZONE) dx = EDGE_PAN_SPEED;
+          else if (r.right - e.clientX < EDGE_ZONE) dx = -EDGE_PAN_SPEED;
+          if (e.clientY - r.top < EDGE_ZONE) dy = EDGE_PAN_SPEED;
+          else if (r.bottom - e.clientY < EDGE_ZONE) dy = -EDGE_PAN_SPEED;
+          if (dx || dy) onPan(dx, dy);
         }
       }
     }

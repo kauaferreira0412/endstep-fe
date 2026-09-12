@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { GameCard } from "@/types/game";
 import { GameCardView } from "./GameCardView";
 
@@ -42,6 +42,13 @@ export function Battlefield({
   const ref = useRef<HTMLDivElement>(null);
   const panRef = useRef<{ x: number; y: number } | null>(null);
 
+  // expõe o onPan no próprio elemento DOM, pra que o arraste vindo de fora
+  // (ex.: HandRail, que acha este elemento via elementsFromPoint) também
+  // consiga fazer auto-pan nas bordas ao soltar uma carta ali.
+  useEffect(() => {
+    if (ref.current) (ref.current as unknown as { __endstepOnPan?: typeof onPan }).__endstepOnPan = onPan;
+  }, [onPan]);
+
   function frac(e: { clientX: number; clientY: number }) {
     const r = ref.current!.getBoundingClientRect();
     const cx = r.width / 2;
@@ -52,6 +59,23 @@ export function Battlefield({
       x: Math.max(0.02, Math.min(0.98, lx / r.width)),
       y: Math.max(0.03, Math.min(0.97, ly / r.height)),
     };
+  }
+
+  const EDGE_ZONE = 44;
+  const EDGE_PAN_SPEED = 16;
+
+  function onFieldDragOver(e: React.DragEvent) {
+    if (!onDropCard) return;
+    e.preventDefault();
+    if (!onPan || !ref.current) return;
+    const r = ref.current.getBoundingClientRect();
+    let dx = 0;
+    let dy = 0;
+    if (e.clientX - r.left < EDGE_ZONE) dx = EDGE_PAN_SPEED;
+    else if (r.right - e.clientX < EDGE_ZONE) dx = -EDGE_PAN_SPEED;
+    if (e.clientY - r.top < EDGE_ZONE) dy = EDGE_PAN_SPEED;
+    else if (r.bottom - e.clientY < EDGE_ZONE) dy = -EDGE_PAN_SPEED;
+    if (dx || dy) onPan(dx, dy);
   }
 
   function onBgPointerDown(e: React.PointerEvent) {
@@ -81,7 +105,7 @@ export function Battlefield({
       onPointerDown={onBgPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
-      onDragOver={(e) => onDropCard && e.preventDefault()}
+      onDragOver={onFieldDragOver}
       onDrop={(e) => {
         if (!onDropCard) return;
         const id = Number(e.dataTransfer.getData("text/card-id"));
