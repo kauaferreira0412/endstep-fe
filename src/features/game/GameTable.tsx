@@ -47,8 +47,6 @@ export function GameTable() {
     turn,
     leaveGame,
     surrender,
-    untapAll,
-    passTurn,
     setTapped,
   } = useGameStore();
 
@@ -364,28 +362,6 @@ export function GameTable() {
         </div>
       )}
 
-      {/* atalhos fixos: desvirar tudo / passar turno — canto inferior direito da area de cartas */}
-      {iAmPlayer && !iAmOut && (
-        <div
-          className="absolute z-50 flex items-center gap-1.5 rounded-lg border border-line bg-bg-elev/95 p-1.5 shadow-pop backdrop-blur"
-          style={{ bottom: 140, right: (chatOpen ? 296 : 0) + 8 }}
-        >
-          <button
-            className="btn btn-ghost !py-1 text-[11px]"
-            onClick={untapAll}
-            title="Desvirar todas as suas cartas"
-          >
-            ⟳ Desvirar tudo
-          </button>
-          <button
-            className="btn btn-primary !py-1 text-[11px]"
-            onClick={passTurn}
-            title="Passar o turno"
-          >
-            ⏭ Passar turno
-          </button>
-        </div>
-      )}
 
       <CardPreview />
       <CascadeModal />
