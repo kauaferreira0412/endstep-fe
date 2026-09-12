@@ -154,7 +154,7 @@ function Tile({
   return (
     <button
       onClick={onClick}
-      className={`overflow-hidden rounded-lg border text-left transition ${
+      className={`block w-full overflow-hidden rounded-lg border text-left transition ${
         selected ? "border-brand ring-2 ring-brand/40" : "border-line hover:border-brand/60"
       }`}
     >
