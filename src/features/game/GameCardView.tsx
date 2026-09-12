@@ -32,11 +32,12 @@ interface Props {
   card: GameCard;
   width: number;
   onContextMenu?: (e: React.MouseEvent, card: GameCard) => void;
-  onClick?: (card: GameCard) => void;
+  onClick?: (card: GameCard, e: React.MouseEvent) => void;
   onPointerDown?: (e: React.PointerEvent, card: GameCard) => void;
   onDragStart?: (e: React.DragEvent, card: GameCard) => void;
   style?: CSSProperties;
   selected?: boolean;
+  multiSelected?: boolean;
 }
 
 /** Uma carta na mesa. Alt+clique abre o preview grande (CardPreview). */
@@ -49,6 +50,7 @@ export function GameCardView({
   onDragStart,
   style,
   selected,
+  multiSelected,
 }: Props) {
   const img = card.identity?.imageNormal ?? card.identity?.imageLarge ?? card.identity?.imageSmall ?? null;
   const isToken = !!card.identity?.isToken;
@@ -71,13 +73,13 @@ export function GameCardView({
       previewShow(card);
       return;
     }
-    onClick?.(card);
+    onClick?.(card, e);
   }
 
   return (
     <div
       className={`group relative select-none rounded-[4.5%] shadow-md transition-transform hover:z-10 ${
-        selected ? "ring-2 ring-brand" : ""
+        multiSelected ? "ring-2 ring-gold" : selected ? "ring-2 ring-brand" : ""
       }`}
       style={{ width, aspectRatio: "488 / 680", transform: `rotate(${rot}deg)`, ...style }}
       draggable={!!onDragStart}

@@ -13,12 +13,13 @@ interface Props {
   cardsOf: (ownerId: number, zone: Zone) => GameCard[];
   cardById: (id: number) => GameCard | undefined;
   selectedId: number | null;
-  onSelect: (c: GameCard) => void;
+  onSelect: (c: GameCard, e: React.MouseEvent) => void;
   onContextMenu: (e: React.MouseEvent, c: GameCard) => void;
   onOpenZone: (zone: Zone, ownerUserId: number) => void;
   focused: boolean;
   onToggleFocus: () => void;
   meLocked?: boolean;
+  multiSelected?: Set<number>;
 }
 
 function clamp(v: number, lo: number, hi: number) {
@@ -40,6 +41,7 @@ export function PlayerMat({
   focused,
   onToggleFocus,
   meLocked,
+  multiSelected,
 }: Props) {
   const s = useGameStore();
   const [zoom, setZoom] = useState(1);
@@ -242,6 +244,7 @@ export function PlayerMat({
             cards={cardsOf(player.userId, "BATTLEFIELD")}
             cardWidth={Math.round((isMe ? 108 : 88) * zoom)}
             interactive={canControl}
+            multiSelected={isMe ? multiSelected : undefined}
             onContextMenu={onContextMenu}
             onDropCard={
               canControl

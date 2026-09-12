@@ -10,7 +10,8 @@ interface Props {
   /** carta solta no campo (fração 0..1). O pai decide reposicionar ou trazer de outra zona. */
   onDropCard?: (cardId: number, x: number, y: number) => void;
   selectedId?: number | null;
-  onSelect?: (card: GameCard) => void;
+  onSelect?: (card: GameCard, e: React.MouseEvent) => void;
+  multiSelected?: Set<number>;
   /** deslocamento (pan) em px de tela aplicado à camada de cartas. */
   pan?: { x: number; y: number };
   /** arrastar o fundo => pedir pan (dx/dy em px de tela). */
@@ -30,6 +31,7 @@ export function Battlefield({
   onDropCard,
   selectedId,
   onSelect,
+  multiSelected,
   pan = { x: 0, y: 0 },
   onPan,
 }: Props) {
@@ -95,6 +97,7 @@ export function Battlefield({
               card={c}
               width={cardWidth}
               selected={selectedId === c.id}
+              multiSelected={multiSelected?.has(c.id)}
               onContextMenu={onContextMenu}
               onClick={onSelect}
               onDragStart={

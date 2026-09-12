@@ -49,9 +49,11 @@ export function GameTable() {
     surrender,
     untapAll,
     passTurn,
+    setTapped,
   } = useGameStore();
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [multiSelected, setMultiSelected] = useState<Set<number>>(new Set());
   const [menu, setMenu] = useState<{ x: number; y: number; card: GameCard } | null>(null);
   const [browse, setBrowse] = useState<{ zone: Zone; ownerUserId: number } | null>(null);
   const [chatOpen, setChatOpen] = useState(true);
@@ -76,6 +78,15 @@ export function GameTable() {
   const iAmEliminated = !!myPlayer && myPlayer.status === "LOST" && myPlayer.life <= 0;
   const selected = selectedId != null ? cards[selectedId] ?? null : null;
   useGameShortcuts(selected, iAmOut);
+
+  useEffect(() => {
+    if (multiSelected.size === 0) return;
+    function onEsc(e: KeyboardEvent) {
+      if (e.key === "Escape") setMultiSelected(new Set());
+    }
+    window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
+  }, [multiSelected.size]);
 
   // aviso (som + toast) quando VIRA a vez do jogador
   const prevActive = useRef<number | null | undefined>(undefined);
@@ -278,7 +289,20 @@ export function GameTable() {
               cardsOf={cardsOf}
               cardById={(cid) => cards[cid]}
               selectedId={selectedId}
-              onSelect={(c) => setSelectedId(c.id)}
+              multiSelected={multiSelected}
+              onSelect={(c, e) => {
+                if (e.ctrlKey || e.metaKey || e.shiftKey) {
+                  setMultiSelected((prev) => {
+                    const next = new Set(prev);
+                    if (next.has(c.id)) next.delete(c.id);
+                    else next.add(c.id);
+                    return next;
+                  });
+                  return;
+                }
+                setMultiSelected(new Set());
+                setSelectedId(c.id);
+              }}
               onContextMenu={openMenu}
               onOpenZone={(zone, ownerUserId) => setBrowse({ zone, ownerUserId })}
               focused={focusValid && p.userId === focusedUserId}
@@ -311,6 +335,32 @@ export function GameTable() {
             selectedId={selectedId}
             onSelect={(c) => setSelectedId(c.id)}
           />
+        </div>
+      )}
+
+      {/* barra de seleção múltipla (ctrl/cmd/shift+clique nas cartas do campo) */}
+      {multiSelected.size > 0 && (
+        <div className="absolute left-1/2 top-12 z-50 flex -translate-x-1/2 items-center gap-2 rounded-lg border border-gold/50 bg-bg-elev px-3 py-1.5 text-xs shadow-pop">
+          <span className="text-gold">{multiSelected.size} carta(s) selecionada(s)</span>
+          <button
+            className="btn btn-ghost !py-1 text-[11px]"
+            onClick={() => {
+              multiSelected.forEach((id) => setTapped(id, true));
+            }}
+          >
+            Virar (tap)
+          </button>
+          <button
+            className="btn btn-ghost !py-1 text-[11px]"
+            onClick={() => {
+              multiSelected.forEach((id) => setTapped(id, false));
+            }}
+          >
+            Desvirar
+          </button>
+          <button className="btn btn-ghost !py-1 text-[11px]" onClick={() => setMultiSelected(new Set())}>
+            Limpar
+          </button>
         </div>
       )}
 
