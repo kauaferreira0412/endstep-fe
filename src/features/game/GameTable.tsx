@@ -324,9 +324,12 @@ export function GameTable() {
         </div>
       )}
 
-      {/* minha mão (só jogador ativo) */}
+      {/* minha mão (só jogador ativo) — encolhe quando o chat está aberto, nunca fica atrás dele */}
       {iAmPlayer && !iAmOut && (
-        <div className="absolute inset-x-0 bottom-0 z-40 h-[132px]">
+        <div
+          className="absolute bottom-0 z-40 h-[132px]"
+          style={{ left: 0, right: chatOpen ? 296 : 0 }}
+        >
           <HandRail
             cards={cardsOf(me, "HAND")}
             onContextMenu={openMenu}
