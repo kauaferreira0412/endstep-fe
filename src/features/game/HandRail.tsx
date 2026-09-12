@@ -23,11 +23,13 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
     surveil,
     setTokenModalOpen,
     setAddCardModalOpen,
+    reorderHand,
   } = useGameStore();
   const previewShow = useHoverStore((s) => s.show);
   const sorted = [...cards].sort((a, b) => a.position - b.position);
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dragOverId, setDragOverId] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!menuOpen) return;
@@ -132,9 +134,26 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
                 }
               }}
               onContextMenu={(e) => onContextMenu(e, c)}
+              onDragOver={(e) => {
+                e.preventDefault();
+                if (dragOverId !== c.id) setDragOverId(c.id);
+              }}
+              onDragLeave={() => setDragOverId((id) => (id === c.id ? null : id))}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragOverId(null);
+                const draggedId = Number(e.dataTransfer.getData("text/card-id"));
+                if (!draggedId || draggedId === c.id) return;
+                const ids = sorted.map((x) => x.id);
+                const from = ids.indexOf(draggedId);
+                if (from === -1) return;
+                ids.splice(from, 1);
+                ids.splice(ids.indexOf(c.id), 0, draggedId);
+                reorderHand(ids);
+              }}
               className={`h-[132px] shrink-0 cursor-grab rounded-md object-contain transition-transform hover:-translate-y-2 ${
                 selectedId === c.id ? "-translate-y-2 ring-2 ring-brand" : ""
-              }`}
+              } ${dragOverId === c.id ? "outline outline-2 outline-gold" : ""}`}
             />
           );
         })}

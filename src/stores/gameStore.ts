@@ -88,6 +88,7 @@ interface GameState {
   hideCard: (cardId: number) => void;
   passTurn: () => void;
   setPhase: (phase: Phase) => void;
+  reorderHand: (cardIds: number[]) => void;
   surrender: () => void;
   leaveGame: () => void;
   sendChat: (text: string) => void;
@@ -270,6 +271,7 @@ export const useGameStore = create<GameState>((set, get) => {
     hideCard: (cardId) => send("HIDE_CARD", { cardId }),
     passTurn: () => send("PASS_TURN"),
     setPhase: (phase) => send("SET_PHASE", { phase }),
+    reorderHand: (cardIds) => send("REORDER_HAND", { cardIds }),
     surrender: () => send("SURRENDER"),
     leaveGame: () => send("LEAVE_GAME"),
     sendChat: (text) => get().socket?.chat(text),
