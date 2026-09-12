@@ -4,6 +4,15 @@ import { dialog } from "@/stores/dialogStore";
 import type { DeckSummary, Folder } from "@/types/deck";
 import { ColorIdentity } from "./ManaCost";
 
+const FILTER_COLORS: { c: string; cls: string }[] = [
+  { c: "W", cls: "bg-mana-w text-black" },
+  { c: "U", cls: "bg-mana-u text-white" },
+  { c: "B", cls: "bg-mana-b text-white" },
+  { c: "R", cls: "bg-mana-r text-white" },
+  { c: "G", cls: "bg-mana-g text-white" },
+  { c: "C", cls: "bg-mana-c text-black" },
+];
+
 interface TreeNode {
   folder: Folder;
   children: TreeNode[];
@@ -31,12 +40,37 @@ export function DeckSidebar({ onImport }: { onImport: () => void }) {
     useDeckStore();
   const { renameFolder, deleteFolder, deleteDeck, duplicateDeck, patchDeck } = useDeckStore();
 
-  const { roots, looseDecks } = useMemo(() => buildTree(folders, decks), [folders, decks]);
+  const [colorFilter, setColorFilter] = useState<Set<string>>(new Set());
+  const filteredDecks = useMemo(() => {
+    if (colorFilter.size === 0) return decks;
+    return decks.filter((d) => {
+      const ci = (d.colorIdentity || "").toUpperCase();
+      if (colorFilter.has("C")) return ci === "";
+      return [...colorFilter].every((c) => ci.includes(c));
+    });
+  }, [decks, colorFilter]);
+  const { roots, looseDecks } = useMemo(
+    () => buildTree(folders, filteredDecks),
+    [folders, filteredDecks],
+  );
   const [adding, setAdding] = useState<null | { kind: "folder" | "deck"; parentId: number | null }>(
     null,
   );
   const [draft, setDraft] = useState("");
   const [draftFormat, setDraftFormat] = useState("commander");
+
+  function toggleColor(c: string) {
+    setColorFilter((prev) => {
+      const next = new Set(prev);
+      if (c === "C") {
+        return next.has("C") ? new Set() : new Set(["C"]);
+      }
+      next.delete("C");
+      if (next.has(c)) next.delete(c);
+      else next.add(c);
+      return next;
+    });
+  }
 
   async function submitAdd() {
     const name = draft.trim();
@@ -78,6 +112,30 @@ export function DeckSidebar({ onImport }: { onImport: () => void }) {
         >
           ↧ Importar
         </button>
+      </div>
+
+      <div className="flex items-center gap-1 border-b border-line/70 px-2 py-1.5">
+        <span className="text-[10px] uppercase tracking-wide text-ink-faint">Cor</span>
+        {FILTER_COLORS.map(({ c, cls }) => (
+          <button
+            key={c}
+            title={c === "C" ? "Incolor" : c}
+            onClick={() => toggleColor(c)}
+            className={`h-5 w-5 rounded-full text-[10px] font-bold transition ${cls} ${
+              colorFilter.has(c) ? "ring-2 ring-brand ring-offset-1 ring-offset-bg" : "opacity-40 hover:opacity-80"
+            }`}
+          >
+            {c}
+          </button>
+        ))}
+        {colorFilter.size > 0 && (
+          <button
+            className="ml-auto text-[10px] text-ink-faint hover:text-ink"
+            onClick={() => setColorFilter(new Set())}
+          >
+            limpar
+          </button>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto p-1.5">
@@ -141,7 +199,7 @@ export function DeckSidebar({ onImport }: { onImport: () => void }) {
 
         {roots.length === 0 && looseDecks.length === 0 && !adding && (
           <p className="px-2 py-6 text-center text-xs text-ink-faint">
-            Sem pastas ou decks ainda.
+            {colorFilter.size > 0 ? "Nenhum deck com essas cores." : "Sem pastas ou decks ainda."}
           </p>
         )}
       </div>
