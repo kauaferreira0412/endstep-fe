@@ -76,7 +76,7 @@ export function DeckBuilder({ detail }: { detail: DeckDetail }) {
 
   const [exporting, setExporting] = useState<string | null>(null);
   const [txtView, setTxtView] = useState<string | null>(null);
-  async function doExport(fmt: "txt" | "csv" | "json" | "pdf") {
+  async function doExport(fmt: "txt" | "csv" | "json" | "pdf" | "pdf-proxy") {
     setExporting(fmt);
     try {
       await api.exportDeck(detail.id, fmt);
@@ -169,6 +169,14 @@ export function DeckBuilder({ detail }: { detail: DeckDetail }) {
                 {exporting === f ? "…" : f}
               </button>
             ))}
+            <button
+              className="border-l border-line px-2.5 py-1.5 hover:bg-bg-elev disabled:opacity-50"
+              onClick={() => void doExport("pdf-proxy")}
+              disabled={exporting !== null}
+              title="PDF de proxy: cartas em tamanho real (63×88mm), 9 por página, prontas pra imprimir e cortar"
+            >
+              {exporting === "pdf-proxy" ? "…" : "proxy"}
+            </button>
           </div>
           <button
             className="btn !py-1.5 text-sm"

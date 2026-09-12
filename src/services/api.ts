@@ -337,7 +337,7 @@ export const api = {
     if (!res.ok) throw new ApiError(res.status, "Falha ao gerar o texto do deck");
     return res.text();
   },
-  exportDeck: async (id: number, format: "txt" | "csv" | "json" | "pdf"): Promise<void> => {
+  exportDeck: async (id: number, format: "txt" | "csv" | "json" | "pdf" | "pdf-proxy"): Promise<void> => {
     const res = await fetch(`${BASE}/api/decks/${id}/export?format=${format}`, {
       headers: tokenStore.access() ? { Authorization: `Bearer ${tokenStore.access()}` } : {},
     });
