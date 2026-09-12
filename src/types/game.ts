@@ -69,6 +69,14 @@ export interface CardIdentity {
   isToken: boolean;
   tokenPt: string | null;
   tokenColors: string | null;
+  hasBackFace: boolean;
+  backName: string | null;
+  backTypeLine: string | null;
+  backManaCost: string | null;
+  backOracleText: string | null;
+  backImageSmall: string | null;
+  backImageNormal: string | null;
+  backImageLarge: string | null;
 }
 
 export interface GameCard {
@@ -82,6 +90,7 @@ export interface GameCard {
   tapped: boolean;
   faceDown: boolean;
   rotation: number;
+  transformed: boolean;
   counters: Record<string, number>;
   identity: CardIdentity | null;
 }

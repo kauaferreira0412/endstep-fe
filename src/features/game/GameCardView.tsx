@@ -52,7 +52,10 @@ export function GameCardView({
   selected,
   multiSelected,
 }: Props) {
-  const img = card.identity?.imageNormal ?? card.identity?.imageLarge ?? card.identity?.imageSmall ?? null;
+  const showingBack = card.transformed && card.identity?.hasBackFace;
+  const img = showingBack
+    ? card.identity?.backImageNormal ?? card.identity?.backImageLarge ?? card.identity?.backImageSmall ?? null
+    : card.identity?.imageNormal ?? card.identity?.imageLarge ?? card.identity?.imageSmall ?? null;
   const isToken = !!card.identity?.isToken;
   const show = !card.faceDown && img;
   const showTokenCard = !card.faceDown && !img && isToken;
@@ -63,6 +66,7 @@ export function GameCardView({
 
   const previewShow = useHoverStore((s) => s.show);
   const cardCounter = useGameStore((s) => s.cardCounter);
+  const flipCard = useGameStore((s) => s.flipCard);
   const meUserId = useGameStore((s) => s.meUserId);
   const canEditCounters = card.ownerUserId === meUserId || card.controllerUserId === meUserId;
 
@@ -87,7 +91,9 @@ export function GameCardView({
       onContextMenu={(e) => onContextMenu?.(e, card)}
       onClick={handleClick}
       onPointerDown={(e) => onPointerDown?.(e, card)}
-      title={card.identity?.displayName ?? card.identity?.name ?? "Carta"}
+      title={
+        (showingBack ? card.identity?.backName : card.identity?.displayName ?? card.identity?.name) ?? "Carta"
+      }
     >
       {showTokenCard ? (
         <div
@@ -111,6 +117,18 @@ export function GameCardView({
           draggable={false}
           className="h-full w-full rounded-[4.5%] object-cover"
         />
+      )}
+      {canEditCounters && card.identity?.hasBackFace && (
+        <button
+          className="absolute right-1 top-1 z-10 grid h-5 w-5 place-items-center rounded-full bg-black/70 text-[11px] text-white opacity-0 transition group-hover:opacity-100 hover:bg-black"
+          title={showingBack ? "Virar pra frente" : "Transformar (ver o verso)"}
+          onClick={(e) => {
+            e.stopPropagation();
+            flipCard(card.id);
+          }}
+        >
+          ⟲
+        </button>
       )}
       {counters.length > 0 && (
         <div className="absolute -bottom-1 left-1/2 flex -translate-x-1/2 gap-0.5">

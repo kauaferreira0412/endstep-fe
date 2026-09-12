@@ -59,6 +59,7 @@ interface GameState {
   untapAll: () => void;
   rotate: (cardId: number, rotation: number) => void;
   setFaceDown: (cardId: number, faceDown: boolean) => void;
+  flipCard: (cardId: number) => void;
   cardCounter: (cardId: number, kind: string, delta: number) => void;
   playerCounter: (targetUserId: number, kind: string, delta: number) => void;
   changeLife: (targetUserId: number, delta: number) => void;
@@ -249,6 +250,7 @@ export const useGameStore = create<GameState>((set, get) => {
     untapAll: () => send("UNTAP_ALL"),
     rotate: (cardId, rotation) => send("ROTATE", { cardId, rotation }),
     setFaceDown: (cardId, faceDown) => send("SET_FACE_DOWN", { cardId, faceDown }),
+    flipCard: (cardId) => send("FLIP_CARD", { cardId }),
     cardCounter: (cardId, kind, delta) => send("CARD_COUNTER", { cardId, kind, delta }),
     playerCounter: (targetUserId, kind, delta) => send("PLAYER_COUNTER", { targetUserId, kind, delta }),
     changeLife: (targetUserId, delta) => send("CHANGE_LIFE", { targetUserId, delta }),

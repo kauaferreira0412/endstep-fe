@@ -30,12 +30,14 @@ export function CardPreview() {
   }, [card, clear]);
 
   if (!card || card.faceDown) return null;
-  const img =
-    card.identity?.imageLarge ?? card.identity?.imageNormal ?? card.identity?.imageSmall ?? null;
+  const showingBack = card.transformed && card.identity?.hasBackFace;
+  const img = showingBack
+    ? card.identity?.backImageLarge ?? card.identity?.backImageNormal ?? card.identity?.backImageSmall ?? null
+    : card.identity?.imageLarge ?? card.identity?.imageNormal ?? card.identity?.imageSmall ?? null;
   if (!img) return null;
 
   const oracleCardId = card.identity?.oracleCardId ?? null;
-  const oracleText = card.identity?.oracleText ?? null;
+  const oracleText = showingBack ? card.identity?.backOracleText ?? null : card.identity?.oracleText ?? null;
 
   return (
     <div

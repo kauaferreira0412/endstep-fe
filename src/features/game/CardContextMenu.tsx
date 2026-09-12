@@ -102,6 +102,12 @@ export function CardContextMenu({ x, y, card, onClose }: Props) {
             label={card.faceDown ? "Virar para cima" : "Virar para baixo"}
             onClick={() => act(() => s.setFaceDown(card.id, !card.faceDown))}
           />
+          {card.identity?.hasBackFace && (
+            <Item
+              label={card.transformed ? "Voltar pra frente" : "Transformar (ver o verso)"}
+              onClick={() => act(() => s.flipCard(card.id))}
+            />
+          )}
           <div className="my-1 h-px bg-line" />
           <Item label="+1  marcador +1/+1" onClick={() => act(() => s.cardCounter(card.id, "+1/+1", 1))} />
           <Item label="−1  marcador +1/+1" onClick={() => act(() => s.cardCounter(card.id, "+1/+1", -1))} />
