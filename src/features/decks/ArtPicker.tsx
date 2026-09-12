@@ -80,7 +80,7 @@ export function ArtPicker({
         {loading ? (
           <p className="py-8 text-center text-sm text-ink-faint">Carregando…</p>
         ) : (
-          <div className="mt-4 grid min-h-0 flex-1 grid-cols-2 gap-3 overflow-y-auto pr-1 sm:grid-cols-3">
+          <div className="mt-4 flex min-h-0 flex-1 flex-wrap content-start gap-3 overflow-y-auto pr-1">
             <Tile
               label="Padrão"
               selected={!current.printingId && !current.customArtId}
@@ -158,7 +158,7 @@ function Tile({
   return (
     <button
       onClick={onClick}
-      className={`flex w-full flex-col overflow-hidden rounded-lg border text-left transition ${
+      className={`flex w-[calc(50%-6px)] flex-col overflow-hidden rounded-lg border text-left transition sm:w-[calc(33.333%-8px)] ${
         selected ? "border-brand ring-2 ring-brand/40" : "border-line hover:border-brand/60"
       }`}
     >
