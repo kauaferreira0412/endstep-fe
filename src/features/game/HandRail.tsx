@@ -11,6 +11,17 @@ interface Props {
   onSelect: (card: GameCard) => void;
 }
 
+const DRAG_THRESHOLD = 6;
+const DRAG_OVER_CLASSES = ["outline", "outline-2", "outline-gold"];
+
+interface DragState {
+  cardId: number;
+  img: string;
+  startX: number;
+  startY: number;
+  active: boolean;
+}
+
 export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) {
   const {
     draw,
@@ -24,16 +35,22 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
     setTokenModalOpen,
     setAddCardModalOpen,
     reorderHand,
+    playCard,
     untapAll,
     passTurn,
   } = useGameStore();
   const previewShow = useHoverStore((s) => s.show);
   const sorted = [...cards].sort((a, b) => a.position - b.position);
+  const sortedRef = useRef(sorted);
+  sortedRef.current = sorted;
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const rowRef = useRef<HTMLDivElement>(null);
-  const DRAG_OVER_CLASSES = ["outline", "outline-2", "outline-gold"];
+  const ghostRef = useRef<HTMLDivElement>(null);
+  const dragRef = useRef<DragState | null>(null);
+  const lastTargetRef = useRef<HTMLElement | null>(null);
+  const suppressClickRef = useRef(false);
+
   useEffect(() => {
     if (!menuOpen) return;
     const close = (e: MouseEvent) => {
@@ -43,28 +60,101 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
     return () => window.removeEventListener("mousedown", close);
   }, [menuOpen]);
 
-  // o auto-scroll nativo do navegador durante um drag em cima de um container
-  // com overflow-x pode travar a aba inteira (bug conhecido do Chromium com
-  // muitos elementos). Desliga o scroll enquanto qualquer carta esta sendo
-  // arrastada e volta a ligar assim que o drag termina.
+  // Arraste da mão feito na mão (pointer events), sem depender do drag-and-drop
+  // nativo do HTML5 — em alguns navegadores (Edge/Chromium) esse arraste nativo
+  // trava a aba inteira ao soltar uma carta da mão no campo (bug do navegador,
+  // não de tamanho de mão). Isto substitui inteiramente aquele mecanismo.
   useEffect(() => {
-    function disableScroll() {
-      rowRef.current?.classList.remove("overflow-x-auto");
-      rowRef.current?.classList.add("overflow-x-hidden");
+    function clearHighlight() {
+      if (lastTargetRef.current) {
+        lastTargetRef.current.classList.remove(...DRAG_OVER_CLASSES);
+        lastTargetRef.current = null;
+      }
     }
-    function enableScroll() {
-      rowRef.current?.classList.remove("overflow-x-hidden");
-      rowRef.current?.classList.add("overflow-x-auto");
+
+    function endDrag() {
+      clearHighlight();
+      dragRef.current = null;
+      if (ghostRef.current) ghostRef.current.style.display = "none";
     }
-    document.addEventListener("dragstart", disableScroll);
-    document.addEventListener("dragend", enableScroll);
-    document.addEventListener("drop", enableScroll);
+
+    function onMove(e: PointerEvent) {
+      const d = dragRef.current;
+      if (!d) return;
+      if (!d.active) {
+        if (Math.hypot(e.clientX - d.startX, e.clientY - d.startY) < DRAG_THRESHOLD) return;
+        d.active = true;
+        suppressClickRef.current = true;
+        if (ghostRef.current) {
+          ghostRef.current.style.display = "block";
+          ghostRef.current.style.backgroundImage = d.img ? `url(${d.img})` : "none";
+        }
+      }
+      if (ghostRef.current) {
+        ghostRef.current.style.left = `${e.clientX}px`;
+        ghostRef.current.style.top = `${e.clientY}px`;
+      }
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const target =
+        (el?.closest("[data-hand-card-id]") as HTMLElement | null) ??
+        (el?.closest('[data-battlefield-mine="true"]') as HTMLElement | null) ??
+        null;
+      if (target !== lastTargetRef.current) {
+        clearHighlight();
+        if (target) {
+          target.classList.add(...DRAG_OVER_CLASSES);
+          lastTargetRef.current = target;
+        }
+      }
+    }
+
+    function onUp(e: PointerEvent) {
+      const d = dragRef.current;
+      if (!d) return;
+      if (d.active) {
+        const el = document.elementFromPoint(e.clientX, e.clientY);
+        const handTarget = el?.closest("[data-hand-card-id]") as HTMLElement | null;
+        const bfTarget = el?.closest('[data-battlefield-mine="true"]') as HTMLElement | null;
+        if (handTarget) {
+          const targetId = Number(handTarget.dataset.handCardId);
+          if (targetId && targetId !== d.cardId) {
+            const ids = sortedRef.current.map((x) => x.id);
+            const from = ids.indexOf(d.cardId);
+            const to = ids.indexOf(targetId);
+            if (from !== -1 && to !== -1) {
+              const next = ids.slice();
+              next.splice(from, 1);
+              // arrastando pra direita: entra depois do alvo; pra esquerda: entra antes
+              next.splice(to, 0, d.cardId);
+              reorderHand(next);
+            }
+          }
+        } else if (bfTarget) {
+          const r = bfTarget.getBoundingClientRect();
+          const x = Math.max(0.02, Math.min(0.98, (e.clientX - r.left) / r.width));
+          const y = Math.max(0.03, Math.min(0.97, (e.clientY - r.top) / r.height));
+          playCard(d.cardId, x, y);
+        }
+      }
+      endDrag();
+      setTimeout(() => {
+        suppressClickRef.current = false;
+      }, 0);
+    }
+
+    function onCancel() {
+      endDrag();
+    }
+
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+    window.addEventListener("pointercancel", onCancel);
     return () => {
-      document.removeEventListener("dragstart", disableScroll);
-      document.removeEventListener("dragend", enableScroll);
-      document.removeEventListener("drop", enableScroll);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onCancel);
     };
-  }, []);
+  }, [reorderHand, playCard]);
 
   async function askNumber(title: string, message: string, def: string) {
     const v = await dialog.prompt({ title, message, defaultValue: def, placeholder: `ex.: ${def}` });
@@ -80,6 +170,12 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
 
   return (
     <div className="flex h-full items-end gap-3 border-t border-line bg-bg/90 px-4 pb-2 pt-1 backdrop-blur">
+      <div
+        ref={ghostRef}
+        className="pointer-events-none fixed z-[100] hidden w-[90px] -translate-x-1/2 -translate-y-1/2 rounded-md bg-cover bg-center opacity-90 shadow-2xl"
+        style={{ aspectRatio: "488 / 680" }}
+      />
+
       <div className="relative flex shrink-0 flex-col gap-1" ref={menuRef}>
         <button className="btn btn-ghost !px-2 !py-0.5 text-xs" onClick={() => draw(1)}>
           Comprar 1
@@ -138,7 +234,7 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
         )}
       </div>
 
-      <div ref={rowRef} className="flex flex-1 items-end gap-1.5 overflow-x-auto pb-1">
+      <div className="flex flex-1 items-end gap-1.5 overflow-x-auto pb-1">
         {sorted.length === 0 && <span className="py-8 text-xs text-ink-faint">mão vazia</span>}
         {sorted.map((c) => {
           const img =
@@ -148,9 +244,20 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
               key={c.id}
               src={img ?? ""}
               alt={c.identity?.name ?? ""}
-              draggable
-              onDragStart={(e) => e.dataTransfer.setData("text/card-id", String(c.id))}
+              draggable={false}
+              data-hand-card-id={c.id}
+              onPointerDown={(e) => {
+                if (e.button !== 0) return;
+                dragRef.current = {
+                  cardId: c.id,
+                  img: img ?? "",
+                  startX: e.clientX,
+                  startY: e.clientY,
+                  active: false,
+                };
+              }}
               onClick={(e) => {
+                if (suppressClickRef.current) return;
                 if (e.altKey) {
                   e.preventDefault();
                   e.stopPropagation();
@@ -160,25 +267,7 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
                 }
               }}
               onContextMenu={(e) => onContextMenu(e, c)}
-              onDragOver={(e) => e.preventDefault()}
-              onDragEnter={(e) => e.currentTarget.classList.add(...DRAG_OVER_CLASSES)}
-              onDragLeave={(e) => e.currentTarget.classList.remove(...DRAG_OVER_CLASSES)}
-              onDrop={(e) => {
-                e.preventDefault();
-                e.currentTarget.classList.remove(...DRAG_OVER_CLASSES);
-                const draggedId = Number(e.dataTransfer.getData("text/card-id"));
-                if (!draggedId || draggedId === c.id) return;
-                const ids = sorted.map((x) => x.id);
-                const from = ids.indexOf(draggedId);
-                const to = ids.indexOf(c.id);
-                if (from === -1 || to === -1) return;
-                const next = ids.slice();
-                next.splice(from, 1);
-                // arrastando pra direita: entra depois do alvo; pra esquerda: entra antes
-                next.splice(to, 0, draggedId);
-                reorderHand(next);
-              }}
-              className={`h-[132px] shrink-0 cursor-grab rounded-md object-contain transition-transform hover:-translate-y-2 ${
+              className={`h-[132px] shrink-0 cursor-grab select-none rounded-md object-contain transition-transform hover:-translate-y-2 ${
                 selectedId === c.id ? "-translate-y-2 ring-2 ring-brand" : ""
               }`}
             />

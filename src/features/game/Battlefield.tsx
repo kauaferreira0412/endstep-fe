@@ -63,6 +63,7 @@ export function Battlefield({
   return (
     <div
       ref={ref}
+      data-battlefield-mine={interactive ? "true" : undefined}
       className={`relative h-full w-full overflow-hidden rounded-lg border border-line bg-bg-elev/40 ${
         onPan ? "cursor-grab active:cursor-grabbing" : ""
       }`}
