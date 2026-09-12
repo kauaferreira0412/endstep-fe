@@ -63,6 +63,22 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
   // trava a aba inteira ao soltar uma carta da mão no campo (bug do navegador,
   // não de tamanho de mão). Isto substitui inteiramente aquele mecanismo.
   useEffect(() => {
+    // usa elementsFromPoint (todos os elementos empilhados naquele ponto, não só
+    // o do topo) pra "enxergar" o campo por baixo de badges pequenos do HUD
+    // (HUD, zoom, taxa de comandante etc.) que ficam sobrepostos nos cantos do
+    // campo — sem isso, soltar uma carta bem em cima de um desses badges parecia
+    // travado/bloqueado, porque o alvo achado era o badge, não o campo.
+    function findDropTarget(x: number, y: number): { hand: HTMLElement | null; bf: HTMLElement | null } {
+      const stack = document.elementsFromPoint(x, y);
+      for (const el of stack) {
+        const hand = (el as HTMLElement).closest?.("[data-hand-card-id]") as HTMLElement | null;
+        if (hand) return { hand, bf: null };
+        const bf = (el as HTMLElement).closest?.('[data-battlefield-mine="true"]') as HTMLElement | null;
+        if (bf) return { hand: null, bf };
+      }
+      return { hand: null, bf: null };
+    }
+
     function clearHighlight() {
       if (lastTargetRef.current) {
         lastTargetRef.current.classList.remove(...DRAG_OVER_CLASSES);
@@ -92,11 +108,8 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
         ghostRef.current.style.left = `${e.clientX}px`;
         ghostRef.current.style.top = `${e.clientY}px`;
       }
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      const target =
-        (el?.closest("[data-hand-card-id]") as HTMLElement | null) ??
-        (el?.closest('[data-battlefield-mine="true"]') as HTMLElement | null) ??
-        null;
+      const { hand, bf } = findDropTarget(e.clientX, e.clientY);
+      const target = hand ?? bf;
       if (target !== lastTargetRef.current) {
         clearHighlight();
         if (target) {
@@ -110,9 +123,7 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
       const d = dragRef.current;
       if (!d) return;
       if (d.active) {
-        const el = document.elementFromPoint(e.clientX, e.clientY);
-        const handTarget = el?.closest("[data-hand-card-id]") as HTMLElement | null;
-        const bfTarget = el?.closest('[data-battlefield-mine="true"]') as HTMLElement | null;
+        const { hand: handTarget, bf: bfTarget } = findDropTarget(e.clientX, e.clientY);
         if (handTarget) {
           const targetId = Number(handTarget.dataset.handCardId);
           if (targetId && targetId !== d.cardId) {
