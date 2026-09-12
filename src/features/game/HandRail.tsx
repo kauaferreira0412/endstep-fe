@@ -156,15 +156,10 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
           }
         } else if (bfTarget) {
           const r = bfTarget.getBoundingClientRect();
-          const zoom = Number(bfTarget.dataset.zoom || "1") || 1;
           const panX = Number(bfTarget.dataset.panX || "0") || 0;
           const panY = Number(bfTarget.dataset.panY || "0") || 0;
-          const cx = r.width / 2;
-          const cy = r.height / 2;
-          const lx = cx + (e.clientX - r.left - cx - panX) / zoom;
-          const ly = cy + (e.clientY - r.top - cy - panY) / zoom;
-          const x = Math.max(0.02, Math.min(0.98, lx / r.width));
-          const y = Math.max(0.03, Math.min(0.97, ly / r.height));
+          const x = Math.max(0.02, Math.min(0.98, (e.clientX - r.left - panX) / r.width));
+          const y = Math.max(0.03, Math.min(0.97, (e.clientY - r.top - panY) / r.height));
           playCard(d.cardId, x, y);
         }
       }
