@@ -162,8 +162,8 @@ function Tile({
         selected ? "border-brand ring-2 ring-brand/40" : "border-line hover:border-brand/60"
       }`}
     >
-      <div className="relative aspect-[488/680] w-full shrink-0 bg-bg-elev">
-        {children}
+      <div className="relative w-full shrink-0 bg-bg-elev" style={{ paddingTop: "139.34%" }}>
+        <div className="absolute inset-0">{children}</div>
         {badge && (
           <span className="absolute left-1 top-1 rounded bg-brand/80 px-1 text-[9px] font-bold text-white">
             {badge}
