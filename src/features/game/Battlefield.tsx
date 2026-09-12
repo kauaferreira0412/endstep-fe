@@ -16,12 +16,15 @@ interface Props {
   pan?: { x: number; y: number };
   /** arrastar o fundo => pedir pan (dx/dy em px de tela). */
   onPan?: (dx: number, dy: number) => void;
+  /** fator de zoom aplicado à camada inteira (posição + tamanho), não só às cartas. */
+  zoom?: number;
 }
 
 /**
  * Campo de batalha: SEMPRE ocupa 100% da área. As cartas são posicionadas por
- * x/y (fração 0..1); o "zoom" muda só o tamanho das cartas (cardWidth), nunca
- * o tamanho do campo. O pan desloca a camada de cartas.
+ * x/y (fração 0..1) dentro de uma camada que recebe pan+zoom via transform —
+ * assim, ao dar zoom, a distância ENTRE as cartas cresce junto (não só o
+ * tamanho de cada uma), evitando que elas passem a se sobrepor.
  */
 export function Battlefield({
   cards,
@@ -34,15 +37,20 @@ export function Battlefield({
   multiSelected,
   pan = { x: 0, y: 0 },
   onPan,
+  zoom = 1,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
   const panRef = useRef<{ x: number; y: number } | null>(null);
 
   function frac(e: { clientX: number; clientY: number }) {
     const r = ref.current!.getBoundingClientRect();
+    const cx = r.width / 2;
+    const cy = r.height / 2;
+    const lx = cx + (e.clientX - r.left - cx - pan.x) / zoom;
+    const ly = cy + (e.clientY - r.top - cy - pan.y) / zoom;
     return {
-      x: Math.max(0.02, Math.min(0.98, (e.clientX - r.left - pan.x) / r.width)),
-      y: Math.max(0.03, Math.min(0.97, (e.clientY - r.top - pan.y) / r.height)),
+      x: Math.max(0.02, Math.min(0.98, lx / r.width)),
+      y: Math.max(0.03, Math.min(0.97, ly / r.height)),
     };
   }
 
@@ -64,6 +72,9 @@ export function Battlefield({
     <div
       ref={ref}
       data-battlefield-mine={interactive ? "true" : undefined}
+      data-pan-x={pan.x}
+      data-pan-y={pan.y}
+      data-zoom={zoom}
       className={`relative h-full w-full overflow-hidden rounded-lg border border-line bg-bg-elev/40 ${
         onPan ? "cursor-grab active:cursor-grabbing" : ""
       }`}
@@ -82,7 +93,7 @@ export function Battlefield({
     >
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ transform: `translate(${pan.x}px, ${pan.y}px)` }}
+        style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})` }}
       >
         {cards.map((c) => (
           <div

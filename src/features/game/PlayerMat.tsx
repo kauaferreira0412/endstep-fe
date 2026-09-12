@@ -242,7 +242,8 @@ export function PlayerMat({
         <div className="min-w-0 flex-1" onWheel={onWheel}>
           <Battlefield
             cards={cardsOf(player.userId, "BATTLEFIELD")}
-            cardWidth={Math.round((isMe ? 108 : 88) * zoom)}
+            cardWidth={isMe ? 108 : 88}
+            zoom={zoom}
             interactive={canControl}
             multiSelected={isMe ? multiSelected : undefined}
             onContextMenu={onContextMenu}
