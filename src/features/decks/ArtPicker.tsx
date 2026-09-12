@@ -67,7 +67,7 @@ export function ArtPicker({
       onClick={onClose}
     >
       <div
-        className="card flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden p-5"
+        className="card flex max-h-[85vh] w-full max-w-2xl flex-col p-5"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex shrink-0 items-center justify-between">
