@@ -327,13 +327,14 @@ export function GameTable() {
         </div>
       )}
 
-      {/* minha mão (só jogador ativo) — encolhe quando o chat está aberto e deixa espaço fixo
-          pros botões de Desvirar tudo/Passar turno, que não se mexem com o chat */}
+      {/* minha mão (só jogador ativo) — alinhada com a borda direita do campo (mesmo
+          limite do chat); os botões ocupam esse mesmo espaço, por baixo do chat,
+          sem tirar largura extra das cartas */}
       {iAmPlayer && !iAmOut && (
         <>
           <div
             className="absolute bottom-0 z-40 h-[132px]"
-            style={{ left: 0, right: (chatOpen ? 296 : 0) + HAND_ACTIONS_WIDTH }}
+            style={{ left: 0, right: chatOpen ? 296 : HAND_ACTIONS_WIDTH }}
           >
             <HandRail
               cards={cardsOf(me, "HAND")}
@@ -344,7 +345,7 @@ export function GameTable() {
           </div>
           <div
             className="absolute bottom-0 right-0 z-40 flex h-[132px] flex-col items-center justify-center gap-1 border-l border-t border-line bg-bg/90 px-3 backdrop-blur"
-            style={{ width: HAND_ACTIONS_WIDTH }}
+            style={{ width: chatOpen ? 296 : HAND_ACTIONS_WIDTH }}
           >
             <button
               className="btn btn-ghost !py-1 text-[11px]"
