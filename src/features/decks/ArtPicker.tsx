@@ -80,7 +80,7 @@ export function ArtPicker({
         {loading ? (
           <p className="py-8 text-center text-sm text-ink-faint">Carregando…</p>
         ) : (
-          <div className="mt-4 grid min-h-0 flex-1 grid-cols-3 gap-3 overflow-y-auto pr-1 sm:grid-cols-4">
+          <div className="mt-4 grid min-h-0 flex-1 grid-cols-2 gap-3 overflow-y-auto pr-1 sm:grid-cols-3">
             <Tile
               label="Padrão"
               selected={!current.printingId && !current.customArtId}
@@ -97,7 +97,7 @@ export function ArtPicker({
                 selected={current.customArtId === c.id}
                 onClick={() => void pick({ customArtId: c.id })}
               >
-                <img src={c.thumbUrl ?? c.imageUrl} alt="" className="h-full w-full object-cover" />
+                <img src={c.thumbUrl ?? c.imageUrl} alt="" className="h-full w-full object-contain" />
               </Tile>
             ))}
 
@@ -108,8 +108,12 @@ export function ArtPicker({
                 selected={current.printingId === p.id}
                 onClick={() => void pick({ printingId: p.id })}
               >
-                {p.imageSmall ? (
-                  <img src={p.imageSmall} alt="" className="h-full w-full object-cover" />
+                {p.imageNormal ?? p.imageSmall ? (
+                  <img
+                    src={p.imageNormal ?? p.imageSmall ?? undefined}
+                    alt=""
+                    className="h-full w-full object-contain"
+                  />
                 ) : (
                   <div className="grid h-full place-items-center text-[10px] text-ink-faint">sem img</div>
                 )}
@@ -154,19 +158,19 @@ function Tile({
   return (
     <button
       onClick={onClick}
-      className={`relative aspect-[488/680] w-full overflow-hidden rounded-lg border bg-bg-elev text-left transition ${
+      className={`flex w-full flex-col overflow-hidden rounded-lg border text-left transition ${
         selected ? "border-brand ring-2 ring-brand/40" : "border-line hover:border-brand/60"
       }`}
     >
-      {children}
-      {badge && (
-        <span className="absolute left-1 top-1 rounded bg-brand/80 px-1 text-[9px] font-bold text-white">
-          {badge}
-        </span>
-      )}
-      <span className="absolute inset-x-0 bottom-0 truncate bg-black/70 px-1.5 py-1 text-[10px] text-ink-dim">
-        {label}
-      </span>
+      <div className="relative aspect-[488/680] w-full shrink-0 bg-bg-elev">
+        {children}
+        {badge && (
+          <span className="absolute left-1 top-1 rounded bg-brand/80 px-1 text-[9px] font-bold text-white">
+            {badge}
+          </span>
+        )}
+      </div>
+      <span className="truncate px-1.5 py-1 text-[10px] text-ink-dim">{label}</span>
     </button>
   );
 }
