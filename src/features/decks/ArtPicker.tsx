@@ -154,19 +154,19 @@ function Tile({
   return (
     <button
       onClick={onClick}
-      className={`block w-full overflow-hidden rounded-lg border text-left transition ${
+      className={`relative aspect-[488/680] w-full overflow-hidden rounded-lg border bg-bg-elev text-left transition ${
         selected ? "border-brand ring-2 ring-brand/40" : "border-line hover:border-brand/60"
       }`}
     >
-      <div className="relative aspect-[488/680] bg-bg-elev">
-        {children}
-        {badge && (
-          <span className="absolute left-1 top-1 rounded bg-brand/80 px-1 text-[9px] font-bold text-white">
-            {badge}
-          </span>
-        )}
-      </div>
-      <div className="truncate px-1.5 py-1 text-[10px] text-ink-dim">{label}</div>
+      {children}
+      {badge && (
+        <span className="absolute left-1 top-1 rounded bg-brand/80 px-1 text-[9px] font-bold text-white">
+          {badge}
+        </span>
+      )}
+      <span className="absolute inset-x-0 bottom-0 truncate bg-black/70 px-1.5 py-1 text-[10px] text-ink-dim">
+        {label}
+      </span>
     </button>
   );
 }
