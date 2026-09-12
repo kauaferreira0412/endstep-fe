@@ -7,6 +7,9 @@ export interface CardDetailPanelViewProps {
   card: CardDetail | null;
   error: string | null;
   image: string | null;
+  hasBackFace: boolean;
+  showBack: boolean;
+  onToggleFace: () => void;
   onClose: () => void;
 }
 
@@ -15,6 +18,9 @@ export function CardDetailPanelView({
   card,
   error,
   image,
+  hasBackFace,
+  showBack,
+  onToggleFace,
   onClose,
 }: CardDetailPanelViewProps) {
   return (
@@ -35,7 +41,20 @@ export function CardDetailPanelView({
             <div className={styles.typeLine}>{card.typeLine}</div>
 
             <div className={styles.row}>
-              {image && <img src={image} alt={card.name} className={styles.art} />}
+              {image && (
+                <div className={styles.artWrap}>
+                  <img src={image} alt={card.name} className={styles.art} />
+                  {hasBackFace && (
+                    <button
+                      className={styles.flipBtn}
+                      onClick={onToggleFace}
+                      title={showBack ? "Ver a frente" : "Ver o verso (dupla face)"}
+                    >
+                      ⟲ {showBack ? "frente" : "verso"}
+                    </button>
+                  )}
+                </div>
+              )}
               <div className={styles.col}>
                 <CardOracleText
                   reference={{ oracleId }}
@@ -47,7 +66,12 @@ export function CardDetailPanelView({
                   <>
                     <div className={styles.section}>Faces</div>
                     {card.faces.map((f) => (
-                      <div key={f.faceIndex} className={styles.face}>
+                      <div
+                        key={f.faceIndex}
+                        className={`${styles.face} ${
+                          (f.faceIndex === 1) === showBack ? styles.faceActive : ""
+                        }`}
+                      >
                         <span className={styles.faceName}>{f.name}</span>{" "}
                         <span className={styles.faceMana}>{f.manaCost}</span>
                         <div className={styles.faceType}>{f.typeLine}</div>

@@ -11,11 +11,13 @@ interface Props {
 export function CardDetailPanel({ oracleId, onClose }: Props) {
   const [card, setCard] = useState<CardDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showBack, setShowBack] = useState(false);
 
   useEffect(() => {
     let alive = true;
     setCard(null);
     setError(null);
+    setShowBack(false);
     api
       .getCard(oracleId)
       .then((c) => alive && setCard(c))
@@ -33,11 +35,14 @@ export function CardDetailPanel({ oracleId, onClose }: Props) {
     return () => document.removeEventListener("keydown", onEsc);
   }, [onClose]);
 
-  const image =
+  const frontImage =
     card?.printings.find((p) => p.imageLarge || p.imageNormal)?.imageLarge ??
     card?.printings.find((p) => p.imageNormal)?.imageNormal ??
-    card?.faces.find((f) => f.imageLarge || f.imageNormal)?.imageLarge ??
+    card?.faces.find((f) => f.faceIndex === 0 && (f.imageLarge || f.imageNormal))?.imageLarge ??
     null;
+  const backFace = card?.faces.find((f) => f.faceIndex === 1) ?? null;
+  const hasBackFace = !!backFace && (!!backFace.imageLarge || !!backFace.imageNormal);
+  const image = showBack && backFace ? backFace.imageLarge ?? backFace.imageNormal ?? frontImage : frontImage;
 
   return (
     <CardDetailPanelView
@@ -45,6 +50,9 @@ export function CardDetailPanel({ oracleId, onClose }: Props) {
       card={card}
       error={error}
       image={image}
+      hasBackFace={hasBackFace}
+      showBack={showBack}
+      onToggleFace={() => setShowBack((s) => !s)}
       onClose={onClose}
     />
   );

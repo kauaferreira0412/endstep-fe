@@ -35,11 +35,19 @@
   @apply mt-5 flex flex-wrap items-start gap-6;
 }
 
+.artWrap {
+  @apply relative w-[300px] max-w-full shrink-0 self-start;
+}
+
 .art {
-  @apply w-[300px] max-w-full shrink-0 self-start rounded-xl border border-line;
+  @apply w-full rounded-xl border border-line;
   height: auto;
   aspect-ratio: 488 / 680;
   object-fit: contain;
+}
+
+.flipBtn {
+  @apply absolute bottom-2 right-2 rounded-full border border-line bg-bg/85 px-2.5 py-1 text-xs font-medium text-ink backdrop-blur hover:border-brand/60 hover:text-brand;
 }
 
 .col {
@@ -55,7 +63,11 @@
 }
 
 .face {
-  @apply mb-3;
+  @apply mb-3 rounded-md;
+}
+
+.faceActive {
+  @apply -mx-2 border border-brand/40 bg-brand/10 px-2 py-1.5;
 }
 
 .faceName {
