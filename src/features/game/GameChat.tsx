@@ -33,10 +33,7 @@ export function GameChat() {
                 {m.body}
               </div>
             ))
-          : log
-              .slice()
-              .reverse()
-              .map((l) => (
+          : log.map((l) => (
                 <div key={l.sequence} className="text-ink-faint">
                   {l.line}
                 </div>

@@ -110,6 +110,14 @@ export function PlayerMat({
             desistiu
           </span>
         )}
+        {s.searching[player.userId] && (
+          <span
+            className="animate-pulse rounded bg-brand/25 px-1 text-[10px] font-semibold text-brand"
+            title="Está olhando o próprio grimório agora"
+          >
+            🔍 procurando
+          </span>
+        )}
         <span className={player.connected ? "text-ok" : "text-danger"}>●</span>
         <span
           className="rounded bg-bg-elev px-1 text-[10px] text-ink-dim"

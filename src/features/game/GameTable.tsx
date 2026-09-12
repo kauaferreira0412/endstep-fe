@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuthStore } from "@/stores/authStore";
 import { useGameStore } from "@/stores/gameStore";
+import { dialog } from "@/stores/dialogStore";
 import type { GameCard, Zone } from "@/types/game";
 import { CardContextMenu } from "./CardContextMenu";
 import { CardPreview } from "./CardPreview";
@@ -33,8 +34,22 @@ export function GameTable() {
   const navigate = useNavigate();
   const authUser = useAuthStore((s) => s.user);
 
-  const { connect, disconnect, conn, error, players, cards, meUserId, roomCode, status, turn, leaveGame } =
-    useGameStore();
+  const {
+    connect,
+    disconnect,
+    conn,
+    error,
+    players,
+    cards,
+    meUserId,
+    roomCode,
+    status,
+    turn,
+    leaveGame,
+    surrender,
+    untapAll,
+    passTurn,
+  } = useGameStore();
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [menu, setMenu] = useState<{ x: number; y: number; card: GameCard } | null>(null);
@@ -165,6 +180,22 @@ export function GameTable() {
         >
           ← sair
         </button>
+        {iAmPlayer && !iAmOut && status !== "FINISHED" && (
+          <button
+            className="shrink-0 text-danger/80 hover:text-danger"
+            onClick={async () => {
+              const ok = await dialog.confirm({
+                title: "Conceder a partida",
+                message: "Você vai desistir e sair de jogo — os outros continuam. Confirma?",
+                okLabel: "Conceder",
+                danger: true,
+              });
+              if (ok) surrender();
+            }}
+          >
+            Conceder
+          </button>
+        )}
         <span className="shrink-0 font-semibold">Mesa {roomCode}</span>
         <span className={`shrink-0 ${conn === "connected" ? "text-ok" : "text-warn"}`}>
           {conn === "connected" ? "conectado" : conn}
@@ -280,6 +311,29 @@ export function GameTable() {
             selectedId={selectedId}
             onSelect={(c) => setSelectedId(c.id)}
           />
+        </div>
+      )}
+
+      {/* atalhos fixos: desvirar tudo / passar turno */}
+      {iAmPlayer && !iAmOut && (
+        <div
+          className="absolute z-50 flex flex-col gap-1"
+          style={{ bottom: 140, right: chatOpen ? 304 : 8 }}
+        >
+          <button
+            className="btn btn-ghost !py-1 text-[11px] shadow-pop"
+            onClick={untapAll}
+            title="Desvirar todas as suas cartas"
+          >
+            ⟳ Desvirar tudo
+          </button>
+          <button
+            className="btn btn-primary !py-1 text-[11px] shadow-pop"
+            onClick={passTurn}
+            title="Passar o turno"
+          >
+            ⏭ Passar turno
+          </button>
         </div>
       )}
 

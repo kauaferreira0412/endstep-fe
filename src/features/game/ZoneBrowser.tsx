@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGameStore } from "@/stores/gameStore";
 import { useHoverStore } from "@/stores/hoverStore";
 import type { GameCard, Zone } from "@/types/game";
@@ -24,6 +24,14 @@ export function ZoneBrowser({ zone, ownerUserId, onClose }: Props) {
   const previewShow = useHoverStore((st) => st.show);
   const mine = ownerUserId === s.meUserId;
   const [q, setQ] = useState("");
+
+  useEffect(() => {
+    if (mine && zone === "LIBRARY") {
+      s.setSearching(true);
+      return () => s.setSearching(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mine, zone]);
 
   const all = useMemo(() => {
     const list = Object.values(s.cards).filter((c) => c.zone === zone && c.ownerUserId === ownerUserId);

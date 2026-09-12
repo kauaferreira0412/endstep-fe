@@ -30,6 +30,8 @@ interface GameState {
   chat: ChatMessage[];
   conn: Conn;
   error: string | null;
+  /** userIds procurando na própria biblioteca agora (indicador pros outros) */
+  searching: Record<number, boolean>;
   /** resultado da última cascata/descoberta (carta achada) esperando decisão do jogador */
   cascadeHit: { cardId: number; name?: string; exiledCount: number; discover?: boolean } | null;
   /** topo do grimório revelado p/ Scry / Surveil / Look aguardando decisão */
@@ -89,6 +91,7 @@ interface GameState {
   surrender: () => void;
   leaveGame: () => void;
   sendChat: (text: string) => void;
+  setSearching: (active: boolean) => void;
 }
 
 function byId<T extends { userId?: number; id?: number }>(list: T[], key: "userId" | "id"): Record<number, T> {
@@ -170,6 +173,11 @@ export const useGameStore = create<GameState>((set, get) => {
         }
         break;
       }
+      case "SEARCHING": {
+        const { userId, active } = env.data;
+        set((st) => ({ searching: { ...st.searching, [userId]: active } }));
+        break;
+      }
       default:
         break;
     }
@@ -190,6 +198,7 @@ export const useGameStore = create<GameState>((set, get) => {
     chat: [],
     conn: "idle",
     error: null,
+    searching: {},
     cascadeHit: null,
     lookTop: null,
     tokenModalOpen: false,
@@ -214,6 +223,7 @@ export const useGameStore = create<GameState>((set, get) => {
         cards: {},
         log: [],
         chat: [],
+        searching: {},
         cascadeHit: null,
         lookTop: null,
         tokenModalOpen: false,
@@ -263,5 +273,6 @@ export const useGameStore = create<GameState>((set, get) => {
     surrender: () => send("SURRENDER"),
     leaveGame: () => send("LEAVE_GAME"),
     sendChat: (text) => get().socket?.chat(text),
+    setSearching: (active) => get().socket?.searching(active),
   };
 });

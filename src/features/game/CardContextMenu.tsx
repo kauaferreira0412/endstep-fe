@@ -106,6 +106,7 @@ export function CardContextMenu({ x, y, card, onClose }: Props) {
           <Item label="+1  marcador +1/+1" onClick={() => act(() => s.cardCounter(card.id, "+1/+1", 1))} />
           <Item label="−1  marcador +1/+1" onClick={() => act(() => s.cardCounter(card.id, "+1/+1", -1))} />
           <Item label="+1  marcador −1/−1" onClick={() => act(() => s.cardCounter(card.id, "-1/-1", 1))} />
+          <Item label="−1  marcador −1/−1" onClick={() => act(() => s.cardCounter(card.id, "-1/-1", -1))} />
           <Item label="+1  lealdade" onClick={() => act(() => s.cardCounter(card.id, "loyalty", 1))} />
           <Item label="−1  lealdade" onClick={() => act(() => s.cardCounter(card.id, "loyalty", -1))} />
           <Item label="+1  atordoamento (stun)" onClick={() => act(() => s.cardCounter(card.id, "stun", 1))} />

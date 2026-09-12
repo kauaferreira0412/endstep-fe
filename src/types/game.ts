@@ -170,4 +170,5 @@ export type ServerEnvelope =
   | { type: "CHAT"; data: ChatMessage }
   | { type: "PRESENCE"; data: unknown }
   | { type: "NOTICE"; data: GameNotice }
+  | { type: "SEARCHING"; data: { userId: number; active: boolean } }
   | { type: "ERROR"; data: { message: string } };

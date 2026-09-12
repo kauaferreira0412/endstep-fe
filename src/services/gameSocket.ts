@@ -67,6 +67,14 @@ export class GameSocket {
     });
   }
 
+  searching(active: boolean) {
+    this.client?.publish({
+      destination: `/app/game/${this.gameId}/searching`,
+      body: JSON.stringify({ active }),
+      headers: { "content-type": "application/json" },
+    });
+  }
+
   chat(text: string) {
     this.client?.publish({
       destination: `/app/game/${this.gameId}/chat`,
