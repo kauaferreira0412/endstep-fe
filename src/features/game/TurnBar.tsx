@@ -10,10 +10,9 @@ const COMBAT_PHASES: Phase[] = [
 ];
 
 export function TurnBar() {
-  const { turn, players, meUserId, passTurn, setPhase, untapAll } = useGameStore();
+  const { turn, players, setPhase } = useGameStore();
   if (!turn) return null;
   const active = Object.values(players).find((p) => p.userId === turn.activeUserId);
-  const myTurn = turn.activeUserId === meUserId;
 
   function step(p: Phase, label: string, combat = false) {
     return (
@@ -54,12 +53,6 @@ export function TurnBar() {
         {step("END", "Final")}
         {step("CLEANUP", "Limpeza")}
       </div>
-      <button className="btn btn-ghost shrink-0 !py-1 text-[11px]" onClick={untapAll}>
-        Desvirar tudo
-      </button>
-      <button className="btn btn-primary shrink-0 !py-1 text-[11px]" onClick={passTurn}>
-        {myTurn ? "Passar turno" : "Passar (fora do turno)"}
-      </button>
     </div>
   );
 }

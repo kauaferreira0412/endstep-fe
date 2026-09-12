@@ -364,21 +364,21 @@ export function GameTable() {
         </div>
       )}
 
-      {/* atalhos fixos: desvirar tudo / passar turno */}
+      {/* atalhos fixos: desvirar tudo / passar turno — canto inferior direito da area de cartas */}
       {iAmPlayer && !iAmOut && (
         <div
-          className="absolute z-50 flex flex-col gap-1"
-          style={{ bottom: 140, right: chatOpen ? 304 : 8 }}
+          className="absolute z-50 flex items-center gap-1.5 rounded-lg border border-line bg-bg-elev/95 p-1.5 shadow-pop backdrop-blur"
+          style={{ bottom: 140, right: (chatOpen ? 296 : 0) + 8 }}
         >
           <button
-            className="btn btn-ghost !py-1 text-[11px] shadow-pop"
+            className="btn btn-ghost !py-1 text-[11px]"
             onClick={untapAll}
             title="Desvirar todas as suas cartas"
           >
             ⟳ Desvirar tudo
           </button>
           <button
-            className="btn btn-primary !py-1 text-[11px] shadow-pop"
+            className="btn btn-primary !py-1 text-[11px]"
             onClick={passTurn}
             title="Passar o turno"
           >

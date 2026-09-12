@@ -146,10 +146,13 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
                 if (!draggedId || draggedId === c.id) return;
                 const ids = sorted.map((x) => x.id);
                 const from = ids.indexOf(draggedId);
-                if (from === -1) return;
-                ids.splice(from, 1);
-                ids.splice(ids.indexOf(c.id), 0, draggedId);
-                reorderHand(ids);
+                const to = ids.indexOf(c.id);
+                if (from === -1 || to === -1) return;
+                const next = ids.slice();
+                next.splice(from, 1);
+                // arrastando pra direita: entra depois do alvo; pra esquerda: entra antes
+                next.splice(to, 0, draggedId);
+                reorderHand(next);
               }}
               className={`h-[132px] shrink-0 cursor-grab rounded-md object-contain transition-transform hover:-translate-y-2 ${
                 selectedId === c.id ? "-translate-y-2 ring-2 ring-brand" : ""
