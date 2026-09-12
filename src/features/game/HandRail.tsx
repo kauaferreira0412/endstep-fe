@@ -32,6 +32,7 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
 
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
   const DRAG_OVER_CLASSES = ["outline", "outline-2", "outline-gold"];
   useEffect(() => {
     if (!menuOpen) return;
@@ -41,6 +42,29 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
     window.addEventListener("mousedown", close);
     return () => window.removeEventListener("mousedown", close);
   }, [menuOpen]);
+
+  // o auto-scroll nativo do navegador durante um drag em cima de um container
+  // com overflow-x pode travar a aba inteira (bug conhecido do Chromium com
+  // muitos elementos). Desliga o scroll enquanto qualquer carta esta sendo
+  // arrastada e volta a ligar assim que o drag termina.
+  useEffect(() => {
+    function disableScroll() {
+      rowRef.current?.classList.remove("overflow-x-auto");
+      rowRef.current?.classList.add("overflow-x-hidden");
+    }
+    function enableScroll() {
+      rowRef.current?.classList.remove("overflow-x-hidden");
+      rowRef.current?.classList.add("overflow-x-auto");
+    }
+    document.addEventListener("dragstart", disableScroll);
+    document.addEventListener("dragend", enableScroll);
+    document.addEventListener("drop", enableScroll);
+    return () => {
+      document.removeEventListener("dragstart", disableScroll);
+      document.removeEventListener("dragend", enableScroll);
+      document.removeEventListener("drop", enableScroll);
+    };
+  }, []);
 
   async function askNumber(title: string, message: string, def: string) {
     const v = await dialog.prompt({ title, message, defaultValue: def, placeholder: `ex.: ${def}` });
@@ -114,7 +138,7 @@ export function HandRail({ cards, onContextMenu, selectedId, onSelect }: Props) 
         )}
       </div>
 
-      <div className="flex flex-1 items-end gap-1.5 overflow-x-auto pb-1">
+      <div ref={rowRef} className="flex flex-1 items-end gap-1.5 overflow-x-auto pb-1">
         {sorted.length === 0 && <span className="py-8 text-xs text-ink-faint">mão vazia</span>}
         {sorted.map((c) => {
           const img =
